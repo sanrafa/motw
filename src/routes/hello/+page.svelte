@@ -8,4 +8,4 @@
 	The current node environment is: {process.env.NODE_ENV}
 </p>
 
-<p>This is rebuilt a fifth time.</p>
+<h1>The Watchtower works.</h1>
