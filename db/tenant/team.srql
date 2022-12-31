@@ -1,0 +1,13 @@
+DEFINE TABLE team SCHEMAFULL;
+
+DEFINE FIELD keeper ON TABLE team TYPE record(user) ASSERT $value IS NOT NONE;
+DEFINE FIELD team_name ON TABLE team TYPE string ASSERT $value IS NOT NONE;
+DEFINE FIELD team_description ON TABLE team TYPE string VALUE $after OR "A ragtag team of monster hunters";
+DEFINE FIELD config ON TABLE team TYPE object;
+DEFINE FIELD config.allowed_hunters ON TABLE team TYPE array;
+DEFINE FIELD config.allowed_hunters.* ON TABLE team TYPE record(archetype);
+DEFINE FIELD config.required_hunters ON TABLE team TYPE array;
+DEFINE FIELD config.required_hunters.* ON TABLE team TYPE record(archetype);
+DEFINE FIELD config.max_players ON TABLE team TYPE int VALUE $after OR 5 ASSERT $value < 8;
+DEFINE FIELD config.min_players ON TABLE team TYPE int VALUE $after OR 2 ASSERT $value >= 2;
+DEFINE FIELD config.keeper_can_edit ON TABLE team TYPE boolean VALUE $after OR true;

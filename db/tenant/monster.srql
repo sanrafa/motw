@@ -1,0 +1,14 @@
+DEFINE TABLE monster SCHEMAFULL;
+
+DEFINE FIELD keeper ON TABLE monster TYPE record(user) ASSERT $value IS NOT NONE;
+DEFINE FIELD monster_name ON TABLE monster TYPE string ASSERT $value IS NOT NONE;
+DEFINE FIELD monster_type ON TABLE monster TYPE record(monster_archetype) ASSERT $value IS NOT NONE;
+DEFINE FIELD powers ON TABLE monster TYPE string;
+DEFINE FIELD attacks ON TABLE monster TYPE array;
+DEFINE FIELD attacks.* ON TABLE monster TYPE record(m_attack);
+DEFINE FIELD available_moves ON TABLE monster TYPE array;
+DEFINE FIELD available_moves.* ON TABLE monster TYPE record(m_move);
+DEFINE FIELD armor ON TABLE monster TYPE int ASSERT $value IS NOT NONE;
+DEFINE FIELD harm_capacity ON TABLE monster TYPE int ASSERT $value IS NOT NONE;
+DEFINE FIELD weaknesses ON TABLE monster TYPE array;
+DEFINE FIELD weaknesses.* ON TABLE monster TYPE string;

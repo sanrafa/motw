@@ -1,0 +1,37 @@
+DEFINE TABLE hunter SCHEMAFULL;
+    /* PERMISSIONS
+        FOR create, update, select FULL
+        FOR delete WHERE team.keeper = $session.sd; */
+
+DEFINE FIELD team ON TABLE hunter TYPE record(team) ASSERT $value IS NOT NONE;
+DEFINE FIELD user ON TABLE hunter TYPE record(user);
+DEFINE FIELD is_active ON TABLE hunter TYPE boolean ASSERT $value IS NOT NULL;
+DEFINE FIELD attributes ON TABLE hunter TYPE object;
+-- find attributes that are archetype-specific
+-- will be null by default, assert that hunter type is valid
+DEFINE FIELD attributes.archetype ON TABLE hunter TYPE record(archetype) ASSERT $value IS NOT NONE;
+DEFINE FIELD attributes.look ON TABLE hunter TYPE array ASSERT array::len($value) == 3;
+DEFINE FIELD attributes.look.* ON TABLE hunter TYPE string; -- may validate for archetype looks
+DEFINE FIELD attributes.available_moves ON TABLE hunter TYPE array ASSERT $value IS NOT NONE;
+DEFINE FIELD attributes.available_moves.* ON TABLE hunter TYPE record(move);
+DEFINE FIELD attributes.gear ON TABLE hunter TYPE array;
+DEFINE FIELD attributes.gear.* ON TABLE hunter TYPE record(gear);
+DEFINE FIELD attributes.luck ON TABLE hunter TYPE int VALUE $after OR 0 ASSERT $value <= 7;
+DEFINE FIELD attributes.experience ON TABLE hunter TYPE int VALUE $after OR 0 ASSERT $value <= 5;
+DEFINE FIELD attributes.improvements ON TABLE hunter TYPE array;
+DEFINE FIELD attributes.improvements.* ON TABLE hunter TYPE record(improvements);
+DEFINE FIELD attributes.ongoing ON TABLE hunter TYPE int VALUE $after OR 0;
+DEFINE FIELD attributes.forward ON TABLE hunter TYPE boolean VALUE $after OR false;
+DEFINE FIELD attributes.harm ON TABLE hunter TYPE object;
+DEFINE FIELD attributes.harm.points ON TABLE hunter TYPE int VALUE $after OR 0 ASSERT $value <= 7;
+DEFINE FIELD attributes.harm.unstable ON TABLE hunter TYPE boolean VALUE $after OR false;
+DEFINE FIELD attributes.ratings ON TABLE hunter TYPE object;
+DEFINE FIELD attributes.ratings.charm ON TABLE hunter TYPE int ASSERT $value > -1 AND $value <= 3;
+DEFINE FIELD attributes.ratings.cool ON TABLE hunter TYPE int ASSERT $value > -1 AND $value <= 3;
+DEFINE FIELD attributes.ratings.sharp ON TABLE hunter TYPE int ASSERT $value > -1 AND $value <= 3;
+DEFINE FIELD attributes.ratings.tough ON TABLE hunter TYPE int ASSERT $value > -1 AND $value <= 3;
+DEFINE FIELD attributes.ratings.weird ON TABLE hunter TYPE int ASSERT $value > -1 AND $value <= 3;
+
+DEFINE EVENT harm_changed ON TABLE hunter WHEN $before.attributes.harm.points != $after.attributes.harm.points THEN (
+    UPDATE $this SET attributes.harm.unstable = ($after.attributes.harm.points > 4)
+);
