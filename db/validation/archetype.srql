@@ -266,6 +266,7 @@ breed: {
             desc: "You have an evil lord who doesn't know you changed sides. They still give you orders, and do not tolerate refusal. Or failure."
         }
     ],
+    /* Convert into weapon tags */
     natural_attacks: [
         "Base: teeth (3-harm intimate)",
         "Base: claws (2-harm hand)",

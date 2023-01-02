@@ -43,7 +43,7 @@ INSERT INTO tag
 ('stealthy', ['descriptive'], 'stealthy', 'Quiet, quick, and effective.', [tag:loud, tag:messy, tag:volatile]),
 ('healing', ['descriptive'], 'healing', 'Transfers life energy: the wielder is healed for as many points of harm as they inflict.'),
 ('holy', ['descriptive'], 'holy', 'Blessed. More effective against monsters with a weakness to holy items.'),
-('ignore-armor', ['harm'], 'ignore-armor', 'Ignores protective armor. (Unless armor has magic tag, then a weapon also needs magic to bypass it.)'),
+('ignorearmor', ['harm'], 'ignore-armor', 'Ignores protective armor. (Unless armor has magic tag, then a weapon also needs magic to bypass it.)'),
 ('innocuous', ['descriptive'], 'innocuous', "Doesn't draw suspicion."),
 ('intimate', ['range'], 'intimate', 'Effective at the closest of quarters - within the embrace of your foe.'),
 ('loud', ['descriptive'], 'loud', 'Loud enough that it draws attention.'),
@@ -65,6 +65,8 @@ INSERT INTO tag
 ('stone', ['descriptive', 'material'], 'stone', 'Made of stone.'),
 ('bone', ['descriptive', 'material'], 'bone', 'Made of bone.'),
 ('teeth', ['descriptive', 'material'], 'teeth', 'Made of teeth.'),
-('obsidian', ['descriptive', 'material'], 'obsidian', 'Made of obsidian.');
+('obsidian', ['descriptive', 'material'], 'obsidian', 'Made of obsidian.'),
+('oldfashioned', ['descriptive'], 'old-fashioned', 'Old-school.'),
+('modern', ['descriptive'], 'modern', 'Modern.');
 
 

@@ -1,2 +1,33 @@
 /// HUNTER GEAR VALIDATION TABLE
 ///// Validation table of available hunter gear.
+
+-- Type: weapon, armor, transport
+-- Desc: description
+-- Tags: tag array
+-- damage: harm #
+-- healing: -harm #
+-- armor: armor #
+-- archetype: approved hunter types, if applicable
+-- owner: creator if custom
+
+DEFINE TABLE gear SCHEMAFULL
+    PERMISSIONS
+        FOR create, select WHERE owner IS NONE OR owner = $auth.id
+        FOR update, delete WHERE owner = $auth.id;
+
+DEFINE FIELD type ON TABLE gear TYPE string ASSERT $value INSIDE ['weapon', 'armor', 'transport'];
+
+DEFINE FIELD desc ON TABLE gear TYPE string ASSERT $value IS NOT NONE;
+
+DEFINE FIELD tags ON TABLE gear TYPE array ASSERT $value IS NOT NONE;
+    DEFINE FIELD tags.* ON TABLE gear TYPE record(tag);
+
+DEFINE FIELD damage ON TABLE gear TYPE int VALUE NONE OR $after;
+
+DEFINE FIELD healing ON TABLE gear TYPE int VALUE NONE OR $after;
+
+DEFINE FIELD armor ON TABLE gear TYPE int VALUE NONE OR $after;
+
+DEFINE FIELD archetype ON TABLE gear TYPE record(archetype) VALUE NONE OR $after;
+
+DEFINE FIELD owner ON TABLE gear TYPE record(user) VALUE NONE OR $after;
