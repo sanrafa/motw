@@ -10,4 +10,4 @@ DEFINE FIELD config.required_hunters ON TABLE team TYPE array;
 DEFINE FIELD config.required_hunters.* ON TABLE team TYPE record(archetype);
 DEFINE FIELD config.max_players ON TABLE team TYPE int VALUE $after OR 5 ASSERT $value < 8;
 DEFINE FIELD config.min_players ON TABLE team TYPE int VALUE $after OR 2 ASSERT $value >= 2;
-DEFINE FIELD config.keeper_can_edit ON TABLE team TYPE boolean VALUE $after OR true;
+DEFINE FIELD config.keeper_can_edit ON TABLE team TYPE bool VALUE $after OR true;

@@ -1,2 +1,527 @@
 /// HUNTER ARCHETYPE VALIDATION TABLE
 ///// List of hunter archetype records
+
+CREATE archetype:chosen CONTENT {
+    description: "Your birth was prophesied. You are the Chosen One, and with your abilities you can save the world. If you fail, all will be destroyed. It all rests on you. Only you.",
+    ratings: [
+        {
+            charm: 2,
+            cool: -1,
+            sharp: 1,
+            tough: 2,
+            weird: -1
+        },
+        {
+            charm: -1,
+            cool: 2,
+            sharp: 1,
+            tough: 2,
+            weird: -1
+        },
+        {
+            charm: 1,
+            cool: 2,
+            sharp: 1,
+            tough: 1,
+            weird: -1
+        },
+        {
+            charm: -1,
+            cool: 1,
+            sharp: 2,
+            tough: -1,
+            weird: 2
+        },
+        {
+            charm: 1,
+            cool: 2,
+            sharp: -1,
+            tough: -1,
+            weird: 2
+        }
+    ],
+    fate: {
+        found_out: [
+            "Nightmares and visions",
+            "Some weirdo told you",
+            "An ancient cult found you",
+            "Sought out by your nemesis",
+            "Attacked by monsters",
+            "Trained from birth",
+            "You found the prophecy",
+            "You found your special weapon"
+        ],
+        heroic: [
+            "Sacrifice",
+            "You are the Champion",
+            "Visions",
+            "Secret training",
+            "Magical powers",
+            "Mystical inheritance",
+            "A normal life",
+            "True love",
+            "You can save the world",
+            "Hidden allies",
+            "The end of monsters",
+            "Divine help"
+        ],
+        doom: [
+            "Death",
+            "You can't save everyone",
+            "Impossible love",
+            "Failure",
+            "A nemesis",
+            "No normal life",
+            "Loss of loved ones",
+            "Treachery",
+            "Doubt",
+            "Sympathy with the enemy",
+            "Damnation",
+            "Hosts of monsters",
+            "The end of days",
+            "The source of Evil"
+        ]
+    }
+};
+
+CREATE archetype:expert CONTENT {
+description: "You have dedicated your life to the study of the unnatural. You know their habits, their weaknesses. You may not be the youngest or strongest, but you know enough to be the biggest threat.",
+ratings: [
+        {
+            charm: -1,
+            cool: 1,
+            sharp: 2,
+            tough: 1,
+            weird: 0
+        },
+        {
+            charm: 0,
+            cool: 1,
+            sharp: 2,
+            tough: 1,
+            weird: 1
+        },
+        {
+            charm: 1,
+            cool: -1,
+            sharp: 2,
+            tough: 1,
+            weird: 0
+        },
+        {
+            charm: -1,
+            cool: 1,
+            sharp: 2,
+            tough: 0,
+            weird: 1
+        },
+        {
+            charm: -1,
+            cool: 0,
+            sharp: 2,
+            tough: -1,
+            weird: 2
+        }
+    ]
+};
+
+CREATE archetype:flake CONTENT {
+description: "Everything's connected. But not everyone can see the patterns, and most people don't even look that hard. But you - you can never stop looking deeper. You can never stop seeing the truth. You spot the patterns: that's how you found the monsters, and that's how you help kill them.",
+ratings: [
+        {
+            charm: 1,
+            cool: 1,
+            sharp: 2,
+            tough: -1,
+            weird: 0
+        },
+        {
+            charm: 0,
+            cool: 1,
+            sharp: 2,
+            tough: -1,
+            weird: 1
+        },
+        {
+            charm: 1,
+            cool: -1,
+            sharp: 2,
+            tough: 1,
+            weird: 0
+        },
+        {
+            charm: 1,
+            cool: -1,
+            sharp: 2,
+            tough: 0,
+            weird: 1
+        },
+        {
+            charm: -1,
+            cool: -1,
+            sharp: 2,
+            tough: 0,
+            weird: 2
+        }
+    ]
+};
+
+CREATE archetype:initiate CONTENT {
+description: "Since the dawn of history, your people have been the bulwark against Darkness. You know the Evils of the world, and you stand against them so that the mass of humanity need not fear. You are the Flame that cleanses the Shadows.",
+sect: {
+    traditions: {
+        good: [
+            "Knowledgable",
+            "Ancient lore",
+            "Magical lore",
+            "Fighting arts",
+            "Chapters everywhere",
+            "Secular power",
+            "Flexible tactics",
+            "Modernised",
+            "Integrated in society",
+            "Open hierarchy",
+            "Rich",
+            "Nifty gadgets",
+            "Magical items"
+        ],
+        bad: [
+            "Dubious motives",
+            "Tradition-bound",
+            "Short-sighted",
+            "Paranoid and secretive",
+            "Closed hierarchy",
+            "Factionalised",
+            "Strict laws",
+            "Mystical oaths",
+            "Total obedience",
+            "Tyrannical leaders",
+            "Obsolete gear",
+            "Poor"
+        ]
+    }
+},
+ratings: [
+        {
+            charm: -1,
+            cool: 1,
+            sharp: 0,
+            tough: 1,
+            weird: 2
+        },
+        {
+            charm: 0,
+            cool: 1,
+            sharp: 1,
+            tough: -1,
+            weird: 2
+        },
+        {
+            charm: -1,
+            cool: 0,
+            sharp: 1,
+            tough: -1,
+            weird: 2
+        },
+        {
+            charm: 1,
+            cool: -1,
+            sharp: 1,
+            tough: 0,
+            weird: 2
+        },
+        {
+            charm: 0,
+            cool: 0,
+            sharp: 0,
+            tough: 1,
+            weird: 2
+        }
+    ]
+};
+
+CREATE archetype:monstrous CONTENT {
+description: "You feel the hunger, the lust to destroy. But you fight it, you never give in. You're not human anymore, not really, but you have to protect those who still are. That way you can tell yourself you're different to the other monsters. Sometimes you even believe it.",
+breed: {
+    curse: [
+        {
+            name: "Feed",
+            desc: "You must subsist on living humans - it might take the form of blood, brains, or spiritual essence but it must be from people. You need to act under pressure to resist feeding whenever a perfect opportunity presents itself."
+        },
+        {
+            name: "Vulnerability",
+            desc: "Pick a substance. You suffer +1 harm when you suffer harm from it. If you are bound or surrounded by it, you must act under pressure to use your powers."
+        },
+        {
+            name: "Pure Drive",
+            desc: "One emotion rules you. Pick from: hunger, hate, anger, fear, jealousy, greed, joy, pride, envy, lust, or cruelty. Whenever you have a chance to indulge that emotion, you must do so immediately, or act under pressure to resist."
+        },
+        {
+            name: "Dark Master",
+            desc: "You have an evil lord who doesn't know you changed sides. They still give you orders, and do not tolerate refusal. Or failure."
+        }
+    ],
+    natural_attacks: [
+        "Base: teeth (3-harm intimate)",
+        "Base: claws (2-harm hand)",
+        "Base: life-drain (1-harm intimate healing)",
+        "Base: magical force (1-harm magical close)",
+        "Add +1 harm to a base",
+        "Add ignore-armour to a base",
+        "Add an extra range to a base"
+    ]
+},
+ratings: [
+        {
+            charm: -1,
+            cool: -1,
+            sharp: 0,
+            tough: 2,
+            weird: 3
+        },
+        {
+            charm: -1,
+            cool: 1,
+            sharp: 1,
+            tough: 0,
+            weird: 3
+        },
+        {
+            charm: 2,
+            cool: 0,
+            sharp: -1,
+            tough: -1,
+            weird: 3
+        },
+        {
+            charm: -2,
+            cool: 2,
+            sharp: 0,
+            tough: 0,
+            weird: 3
+        },
+        {
+            charm: 0,
+            cool: -1,
+            sharp: 2,
+            tough: -1,
+            weird: 3
+        }
+    ]
+};
+
+CREATE archetype:mundane CONTENT {
+description: "You heard about how monsters only pick on people with crazy powers who can fight back on even terms? Just kidding - but hell, you ended up on this monster-hunting team so you gotta do what you can, right?",
+ratings: [
+        {
+            charm: 2,
+            cool: 1,
+            sharp: 0,
+            tough: 1,
+            weird: -1
+        },
+        {
+            charm: 2,
+            cool: -1,
+            sharp: 1,
+            tough: 1,
+            weird: 0
+        },
+        {
+            charm: 2,
+            cool: 0,
+            sharp: -1,
+            tough: 1,
+            weird: 1
+        },
+        {
+            charm: 2,
+            cool: 0,
+            sharp: 1,
+            tough: 1,
+            weird: -1
+        },
+        {
+            charm: 2,
+            cool: 1,
+            sharp: 1,
+            tough: 0,
+            weird: -1
+        }
+    ]
+};
+
+CREATE archetype:professional CONTENT {
+description: "It's kinda strange when you regular 9-to-5 job is to hunt down monster. Still, that's the job you got when you accepted that mysterious transfer. It pays well, and the benefits are good. Like they say, 'you don't have to be crazy to work here, but it sure helps!'",
+agency: {
+    resources: [
+        "Well-armed",
+        "Well-financed",
+        "Rigorous training",
+        "Official pull",
+        "Cover identities",
+        "Offices all over the place",
+        "Good intel",
+        "Recognized authority",
+        "Weird tech gadgets",
+        "Support teams"
+    ],
+    red_tape: [
+        "Dubious motives",
+        "Bureaucratic",
+        "Secretive hierarchy",
+        "Cryptic missions",
+        "Hostile superiors",
+        "Inter-departmental rivalry",
+        "Budget cuts",
+        "'Take no prisoners' policy",
+        "'Live capture' policy",
+        "On-call 24/7"
+    ]
+},
+ratings: [
+        {
+            charm: 0,
+            cool: 2,
+            sharp: -1,
+            tough: 2,
+            weird: -1
+        },
+        {
+            charm: -1,
+            cool: 2,
+            sharp: 1,
+            tough: 1,
+            weird: 0
+        },
+        {
+            charm: 1,
+            cool: 2,
+            sharp: 1,
+            tough: -1,
+            weird: 0
+        },
+        {
+            charm: -1,
+            cool: 2,
+            sharp: 1,
+            tough: 0,
+            weird: 1
+        },
+        {
+            charm: 0,
+            cool: 2,
+            sharp: 2,
+            tough: -1,
+            weird: -1
+        }
+    ]
+};
+
+CREATE archetype:spooky CONTENT {
+description: "You can do things that normal people can't, but there's a price. You haven't paid it in full yet, but the bill's gonna come due soon. It's best you don't give too many details; if someone gets too close, they'll get hurt.",
+dark_side: [
+    "Violence",
+    "Depression",
+    "Secrets",
+    "Lust",
+    "Dark bargain",
+    "Guilt",
+    "Soulless",
+    "Addiction",
+    "Mood swings",
+    "Rage",
+    "Self-destruction",
+    "Poor impulse control",
+    "Greed for power",
+    "Hallucinations",
+    "Pain",
+    "Paranoia"
+],
+ratings: [
+        {
+            charm: 1,
+            cool: 0,
+            sharp: 1,
+            tough: -1,
+            weird: 2
+        },
+        {
+            charm: -1,
+            cool: 1,
+            sharp: 0,
+            tough: 1,
+            weird: 2
+        },
+        {
+            charm: 2,
+            cool: 0,
+            sharp: -1,
+            tough: -1,
+            weird: 2
+        },
+        {
+            charm: 0,
+            cool: -1,
+            sharp: 1,
+            tough: 1,
+            weird: 2
+        },
+        {
+            charm: -1,
+            cool: -1,
+            sharp: 2,
+            tough: 0,
+            weird: 2
+        }
+    ]
+};
+
+CREATE archetype:wronged CONTENT {
+description: "They took your loved ones. Back then you weren't strong enough to fight, but you studied, trained, and now you're ready to kill the things that took the people you love. You'll cleanse the world of their taint; vengeance is all you have left.",
+loss: {
+    relations: [
+        "your parent(s)", "your sibling(s)", "your spouse(s)/partner(s)", "your child(ren)", "your best friend(s)"
+    ],
+    flaws: [
+        "at fault", "selfish", "injured", "weak", "slow", "scared", "in denial", "complicit"
+    ]
+},
+ratings: [
+        {
+            charm: 0,
+            cool: 1,
+            sharp: -1,
+            tough: 2,
+            weird: 1
+        },
+        {
+            charm: 0,
+            cool: 0,
+            sharp: 1,
+            tough: 2,
+            weird: 0
+        },
+        {
+            charm: 1,
+            cool: 0,
+            sharp: 1,
+            tough: 2,
+            weird: 1
+        },
+        {
+            charm: -1,
+            cool: -1,
+            sharp: 0,
+            tough: 2,
+            weird: 2
+        },
+        {
+            charm: 1,
+            cool: -1,
+            sharp: 0,
+            tough: 2,
+            weird: 1
+        }
+    ]
+};

@@ -4,6 +4,6 @@ DEFINE FIELD story_name ON TABLE story TYPE string ASSERT $value IS NOT NONE;
 DEFINE FIELD story_description ON TABLE story TYPE string ASSERT $value IS NOT NONE;
 DEFINE FIELD created_at ON TABLE story TYPE datetime VALUE $before OR time::now();
 DEFINE FIELD updated_at ON TABLE story TYPE datetime VALUE time::now();
-DEFINE FIELD active ON TABLE story TYPE boolean VALUE $after OR false ASSERT $value IS NOT NONE;
+DEFINE FIELD active ON TABLE story TYPE bool VALUE $after OR false ASSERT $value IS NOT NONE;
 DEFINE FIELD team ON TABLE story TYPE record(team) ASSERT $value IS NOT NONE;
 DEFINE FIELD monster ON TABLE story TYPE record(monster) ASSERT $value IS NOT NONE;
