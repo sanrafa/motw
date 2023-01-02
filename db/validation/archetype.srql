@@ -2,6 +2,7 @@
 ///// List of hunter archetype records
 
 CREATE archetype:chosen CONTENT {
+    title: "The Chosen",
     description: "Your birth was prophesied. You are the Chosen One, and with your abilities you can save the world. If you fail, all will be destroyed. It all rests on you. Only you.",
     ratings: [
         {
@@ -85,6 +86,7 @@ CREATE archetype:chosen CONTENT {
 };
 
 CREATE archetype:expert CONTENT {
+title: "The Expert",
 description: "You have dedicated your life to the study of the unnatural. You know their habits, their weaknesses. You may not be the youngest or strongest, but you know enough to be the biggest threat.",
 ratings: [
         {
@@ -126,6 +128,7 @@ ratings: [
 };
 
 CREATE archetype:flake CONTENT {
+title: "The Flake",
 description: "Everything's connected. But not everyone can see the patterns, and most people don't even look that hard. But you - you can never stop looking deeper. You can never stop seeing the truth. You spot the patterns: that's how you found the monsters, and that's how you help kill them.",
 ratings: [
         {
@@ -167,6 +170,7 @@ ratings: [
 };
 
 CREATE archetype:initiate CONTENT {
+title: "The Initiate",
 description: "Since the dawn of history, your people have been the bulwark against Darkness. You know the Evils of the world, and you stand against them so that the mass of humanity need not fear. You are the Flame that cleanses the Shadows.",
 sect: {
     traditions: {
@@ -241,6 +245,7 @@ ratings: [
 };
 
 CREATE archetype:monstrous CONTENT {
+title: "The Monstrous",
 description: "You feel the hunger, the lust to destroy. But you fight it, you never give in. You're not human anymore, not really, but you have to protect those who still are. That way you can tell yourself you're different to the other monsters. Sometimes you even believe it.",
 breed: {
     curse: [
@@ -311,6 +316,7 @@ ratings: [
 };
 
 CREATE archetype:mundane CONTENT {
+title: "The Mundane",
 description: "You heard about how monsters only pick on people with crazy powers who can fight back on even terms? Just kidding - but hell, you ended up on this monster-hunting team so you gotta do what you can, right?",
 ratings: [
         {
@@ -352,6 +358,7 @@ ratings: [
 };
 
 CREATE archetype:professional CONTENT {
+title: "The Professional",
 description: "It's kinda strange when you regular 9-to-5 job is to hunt down monster. Still, that's the job you got when you accepted that mysterious transfer. It pays well, and the benefits are good. Like they say, 'you don't have to be crazy to work here, but it sure helps!'",
 agency: {
     resources: [
@@ -419,6 +426,7 @@ ratings: [
 };
 
 CREATE archetype:spooky CONTENT {
+title: "The Spooky",
 description: "You can do things that normal people can't, but there's a price. You haven't paid it in full yet, but the bill's gonna come due soon. It's best you don't give too many details; if someone gets too close, they'll get hurt.",
 dark_side: [
     "Violence",
@@ -478,6 +486,7 @@ ratings: [
 };
 
 CREATE archetype:wronged CONTENT {
+title: "The Wronged",
 description: "They took your loved ones. Back then you weren't strong enough to fight, but you studied, trained, and now you're ready to kill the things that took the people you love. You'll cleanse the world of their taint; vengeance is all you have left.",
 loss: {
     relations: [

@@ -1,0 +1,70 @@
+// Gear Tag Validation table
+
+-- category: type of tag
+-- Name: tag name
+-- Desc: tag description
+-- Conflicts: cannot be used with these tags
+-- Owner: Keepers can create and save custom tags
+
+DEFINE TABLE tag SCHEMAFULL
+    PERMISSIONS 
+        FOR create, select WHERE owner IS NONE OR owner = $auth.id
+        FOR update, delete WHERE owner = $auth.id;
+
+DEFINE FIELD category ON TABLE tag TYPE array;
+    DEFINE FIELD category.* ON TABLE tag TYPE string ASSERT $value INSIDE ['harm', 'range', 'descriptive', 'material', 'armor'];
+
+DEFINE FIELD name ON TABLE tag TYPE string ASSERT $value IS NOT NONE;
+
+DEFINE FIELD desc ON TABLE tag TYPE string ASSERT $value IS NOT NONE;
+
+DEFINE FIELD conflicts ON TABLE tag TYPE array;
+    DEFINE FIELD conflicts.* ON TABLE tag TYPE record(tag) ASSERT $value IS NOT $parent.id;
+
+DEFINE FIELD owner ON TABLE tag TYPE record(user) VALUE NONE OR $after;
+
+INSERT INTO tag
+(id, category, name, desc, conflicts) VALUES
+('1harm', ['harm'], '1-harm', 'Inflicts 1 harm.', [tag:2harm, tag:3harm, tag:4harm]),
+('2harm', ['harm'], '2-harm', 'Inflicts 2 harm.', [tag:1harm, tag:3harm, tag:4harm]),
+('3harm', ['harm'], '3-harm', 'Inflicts 3 harm.', [tag:1harm, tag:2harm, tag:4harm]),
+('4harm', ['harm'], '4-harm', 'Inflicts 4 harm.', [tag:1harm, tag:2harm, tag:3harm]),
+('1armor', ['armor'], '1-armor', 'Subtract 1 harm from each hit (unless opponent weapon has ignore-armor tag).'),
+('2armor', ['armor'], '2-armor', 'Subtract 2 harm from each hit (unless opponent weapon has ignore-armor tag).'),
+('automatic', ['harm', 'range'], 'automatic', 'Uses automatic fire, which gives either +area or +harm. Hastens need to reload.'),
+('area', ['range'], 'area', 'Can hit multiple foes. Harm can be divided among multiple targets.'),
+('balanced', ['descriptive'], 'balanced', 'Easy to wield and hold on to.', [tag:volatile]),
+('close', ['range'], 'close', "Effective at fairly close quarters - outside arms' reach, but not too far."),
+('far', ['range'], 'far', 'Effective at long range.'),
+('fire', ['descriptive'], 'fire', 'Sets things on fire.'),
+('hand', ['range'], 'hand', "Effective at hand-to-hand combat range - within arms' reach."),
+('heavy', ['descriptive'], 'heavy', 'Weighs a lot, harder to wield or conceal.'),
+('hidden', ['descriptive'], 'hidden', 'Easy to conceal.'),
+('stealthy', ['descriptive'], 'stealthy', 'Quiet, quick, and effective.', [tag:loud, tag:messy, tag:volatile]),
+('healing', ['descriptive'], 'healing', 'Transfers life energy: the wielder is healed for as many points of harm as they inflict.'),
+('holy', ['descriptive'], 'holy', 'Blessed. More effective against monsters with a weakness to holy items.'),
+('ignore-armor', ['harm'], 'ignore-armor', 'Ignores protective armor. (Unless armor has magic tag, then a weapon also needs magic to bypass it.)'),
+('innocuous', ['descriptive'], 'innocuous', "Doesn't draw suspicion."),
+('intimate', ['range'], 'intimate', 'Effective at the closest of quarters - within the embrace of your foe.'),
+('loud', ['descriptive'], 'loud', 'Loud enough that it draws attention.'),
+('magic', ['descriptive'], 'magic', 'Enchanted. Can affect certain creatures that are immune to normal weapons.'),
+('many', ['descriptive'], 'many', 'Small enough that you can carry a large number of them.'),
+('messy', ['descriptive'], 'messy', 'Spreads a lot of blood and gore around.'),
+('quick', ['descriptive'], 'quick', 'Quick to prepare and attack with.', [tag:slow]),
+('reload', ['descriptive'], 'reload', 'Has limited ammunition - may run out at a bad time and need to be reloaded.'),
+('slow', ['descriptive'], 'slow', 'Slow to prepare and attack with.', [tag:quick]),
+('small', ['descriptive'], 'small', 'Tiny and easy to conceal.'),
+('unreliable', ['descriptive'], 'unreliable', 'Needs regular cleaning and maintenance, otherwise it just will not work.'),
+('useful', ['descriptive'], 'useful', 'Has nonviolent uses.'),
+('valuable', ['descriptive'], 'valuable', 'Antique, or made of valuable materials.'),
+('volatile', ['descriptive'], 'volatile', 'Dangerous and unstable - prone to backfire!', [tag:balanced]),
+('steel', ['descriptive', 'material'], 'steel', 'Made of steel.'),
+('coldiron', ['descriptive', 'material'], 'cold iron', 'Made of cold iron.'),
+('silver', ['descriptive', 'material'], 'silver', 'Made of silver.'),
+('wood', ['descriptive', 'material'], 'wood', 'Made of wood.'),
+('stone', ['descriptive', 'material'], 'stone', 'Made of stone.'),
+('bone', ['descriptive', 'material'], 'bone', 'Made of bone.'),
+('teeth', ['descriptive', 'material'], 'teeth', 'Made of teeth.'),
+('obsidian', ['descriptive', 'material'], 'obsidian', 'Made of obsidian.');
+
+
