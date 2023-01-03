@@ -12,8 +12,8 @@
 
 DEFINE TABLE gear SCHEMAFULL
     PERMISSIONS
-        FOR create, select WHERE owner IS NONE OR owner = $auth.id
-        FOR update, delete WHERE owner = $auth.id;
+        FOR create, select FULL
+        FOR update, delete WHERE owner = (SELECT id FROM hunter WHERE id = $auth.token OR user = $auth.id );
 
 DEFINE FIELD type ON TABLE gear TYPE string ASSERT $value INSIDE ['weapon', 'armor', 'transport'];
 
@@ -28,6 +28,79 @@ DEFINE FIELD healing ON TABLE gear TYPE int VALUE NONE OR $after;
 
 DEFINE FIELD armor ON TABLE gear TYPE int VALUE NONE OR $after;
 
-DEFINE FIELD archetype ON TABLE gear TYPE record(archetype) VALUE NONE OR $after;
+DEFINE FIELD archetype ON TABLE gear TYPE array VALUE NONE OR $after;
+    DEFINE FIELD archetype.* ON TABLE gear TYPE record(archetype);
 
-DEFINE FIELD owner ON TABLE gear TYPE record(user) VALUE NONE OR $after;
+DEFINE FIELD owner ON TABLE gear TYPE record(hunter) VALUE NONE OR $after;
+
+INSERT INTO gear 
+(id, type, desc, tags, damage, healing, armor, archetype) VALUES
+('protective', 'armor', 'Protective Gear', [tag:1armor], NONE, NONE, 1, [archetype:chosen]),
+('base-staff', 'weapon', 'staff (1-harm hand/close)', [tag:1harm, tag:hand, tag:close], 1, NONE, NONE, [archetype:chosen]),
+('base-haft', 'weapon', 'haft (2-harm hand)', [tag:2harm, tag:close], 2, NONE, NONE, [archetype:chosen]),
+('base-handle', 'weapon', 'handle (1-harm hand balanced)', [tag:1harm, tag:hand, tag:balanced], 1, NONE, NONE, [archetype:chosen]),
+('base-chain', 'weapon', 'chain (1-harm hand area)', [tag:1harm, tag:hand, tag:area], 1, NONE, NONE, [archetype:chosen]),
+('stakes', 'weapon', 'Mallet & wooden stakes', [tag:3harm, tag:intimate, tag:slow, tag:wooden], 3, NONE, NONE, [archetype:expert]),
+('silversword', 'weapon', 'Silver sword', [tag:2harm, tag:hand, tag:messy, tag:silver], 2, NONE, NONE, [archetype:expert]),
+('ironsword', 'weapon', 'Cold iron sword', [tag:2harm, tag:hand, tag:messy, tag:iron], 2, NONE, NONE, [archetype:expert]),
+('blessedknife', 'weapon', 'Blessed knife', [tag:2harm, tag:hand, tag:holy], 2, NONE, NONE, [archetype:expert]),
+('enchanteddagger', 'weapon', 'Enchanted dagger', [tag:2harm, tag:hand, tag:magic], 2, NONE, NONE, [archetype:expert, archetype:wronged]),
+('jujubag', 'weapon', 'Juju bag', [tag:1harm, tag:far, tag:magic], 1, NONE, NONE, [archetype:expert]),
+('flamethrower', 'weapon', 'Flamethrower', [tag:3harm, tag:close, tag:fire, tag:heavy, tag:volatile], 3, NONE, NONE, [archetype:expert]),
+('magnum', 'weapon', 'Magnum', [tag:modern, tag:3harm, tag:close, tag:reload, tag:loud], 3, NONE, NONE, [archetype:expert, archetype:flake, archetype:initiate, archetype:monstrous]),
+('shotgun', 'weapon', 'Shotgun', [tag:modern, tag:3harm, tag:close, tag:messy, tag:loud], 3, NONE, NONE, [archetype:expert, archetype:flake, archetype:initiate, archetype:monstrous, archetype:professional, archetype:spooky, archetype:wronged]),
+('38revolver', 'weapon', '.38 revolver', [tag:modern, tag:2harm, tag:close, tag:reload, tag:loud], 2, NONE, NONE, [archetype:flake, archetype:initiate, archetype:monstrous, archetype:professional, archetype:spooky, archetype:wronged]),
+('9mm', 'weapon', '9mm handgun', [tag:modern, tag:2harm, tag:close, tag:loud], 2, NONE, NONE, [archetype:flake, archetype:initiate, archetype:monstrous, archetype:professional, archetype:spooky, archetype:wronged]),
+('huntingrifle', 'weapon', 'Hunting rifle', [tag:2harm, tag:far, tag:loud], 2, NONE, NONE, [archetype:flake, archetype:professional, archetype:spooky, archetype:wronged]),
+('bigknife', 'weapon', 'Big knife', [tag:1harm, tag:hand], 1, NONE, NONE, [archetype:flake, archetype:monstrous, archetype:professional, archetype:spooky, archetype:wronged]),
+('throwingknives', 'weapon', 'Throwing knives', [tag:hidden, tag:1harm, tag:close, tag:many], 1, NONE, NONE, [archetype:flake]),
+('holdoutpistol', 'weapon', 'Holdout pistol', [tag:hidden, tag:2harm, tag:close, tag:loud, tag:reload], 2, NONE, NONE, [archetype:flake]),
+('garrote', 'weapon', 'Garrote', [tag:hidden, tag:3harm, tag:intimate], 3, NONE, NONE, [archetype:flake]),
+('watchmansflashlight', 'weapon', "Watchman's flashlight", [tag:hidden, tag:1harm, tag:hand], 1, NONE, NONE, [archetype:flake]),
+('brassknuckles', 'weapon', 'Brass knuckles', [tag:hidden, tag:1harm, tag:hand, tag:stealthy, tag:small], 1, NONE, NONE, [archetype:flake, archetype:monstrous, archetype:wronged]),
+('butterflyknife', 'weapon', 'Butterfly knife', [tag:hidden, tag:1harm, tag:hand], 1, NONE, NONE, [archetype:flake]),
+('oldfashionedarmor', 'armor', 'Old-fashioned armor', [tag:oldfashioned, tag:1armor, tag:heavy], NONE, NONE, 1, [archetype:initiate]),
+('sword', 'weapon', 'Sword', [tag:oldfashioned, tag:2harm, tag:hand, tag:messy], 2, NONE, NONE, [archetype:initiate, archetype:monstrous]),
+('axe', 'weapon', 'Axe', [tag:oldfashioned, tag:2harm, tag:hand, tag:messy], 2, NONE, NONE, [archetype:initiate]),
+('bigsword', 'weapon', 'Big sword', [tag:oldfashioned, tag:3harm, tag:hand, tag:messy, tag:heavy], 3, NONE, NONE, [archetype:initiate]),
+('bigaxe', 'weapon', 'Big axe', [tag:oldfashioned, tag:3harm, tag:hand, tag:messy, tag:slow, tag:heavy], 3, NONE, NONE, [archetype:initiate]),
+('silverknife', 'weapon', 'Silver knife', [tag:oldfashioned, tag:1harm, tag:hand, tag:silver], 1, NONE, NONE, [archetype:initiate]),
+('fightingsticks', 'weapon', 'Fighting sticks', [tag:oldfashioned, tag:1harm, tag:hand, tag:quick], 1, NONE, NONE, [archetype:initiate]),
+('spear', 'weapon', 'Spear', [tag:oldfashioned, tag:2harm, tag:hand, tag:close], 2, NONE, NONE, [archetype:initiate]),
+('mace', 'weapon', 'Mace', [tag:oldfashioned, tag:2harm, tag:hand, tag:messy], 2, NONE, NONE, [archetype:initiate]),
+('crossbow', 'weapon', 'Crossbow', [tag:oldfashioned, tag:2harm, tag:close, tag:slow], 2, NONE, NONE, [archetype:initiate]),
+('sniperrifle', 'weapon', 'Sniper rifle', [tag:modern, tag:3harm, tag:far], 3, NONE, NONE, [archetype:initiate]),
+('base-teeth', 'weapon', 'Base: teeth (3-harm intimate)', [tag:natural, tag:3harm, tag:intimate], 3, NONE, NONE, [archetype:monstrous]),
+('base-claws', 'weapon', 'Base: claws (2-harm hand)', [tag:natural, tag:2harm, tag:hand], 2, NONE, NONE, [archetype:monstrous]),
+('base-lifedrain', 'weapon', 'Base: life-drain (1-harm intimate healing)', [tag:natural, tag:1harm, tag:intimate, tag:healing], 1, NONE, NONE, [archetype:monstrous]),
+('base-magicalforce', 'weapon', 'Base: magical force (1-harm magical close)', [tag:natural, tag:1harm, tag:magic, tag:close], 1, NONE, NONE, [archetype:monstrous]),
+('hugesword', 'weapon', 'Huge sword', [tag:3harm, tag:hand, tag:messy, tag:heavy], 3, NONE, NONE, [archetype:monstrous, archetype:wronged]),
+('golfclub', 'weapon', 'Golf club', [tag:2harm, tag:hand, tag:innocuous, tag:messy], 2, NONE, NONE, [archetype:mundane]),
+('baseballbat', 'weapon', 'Baseball bat', [tag:2harm, tag:hand, tag:innocuous, tag:messy], 2, NONE, NONE, [archetype:mundane]),
+('cricketbat', 'weapon', 'Cricket bat', [tag:2harm, tag:hand, tag:innocuous, tag:messy], 2, NONE, NONE, [archetype:mundane]),
+('hockeystick', 'weapon', 'Hockey stick', [tag:2harm, tag:hand, tag:innocuous, tag:messy], 2, NONE, NONE, [archetype:mundane]),
+('pocketknife', 'weapon', 'Pocket knife', [tag:1harm, tag:hand, tag:useful, tag:small], 1, NONE, NONE, [archetype:mundane]),
+('multitool', 'weapon', 'Multitool', [tag:1harm, tag:hand, tag:useful, tag:small], 1, NONE, NONE, [archetype:mundane]),
+('smallhandgun', 'weapon', 'Small handgun', [tag:2harm, tag:close, tag:loud, tag:reload], 2, NONE, NONE, [archetype:mundane]),
+('bighuntingrifle', 'weapon', 'Large-caliber hunting rifle', [tag:3harm, tag:far, tag:loud, tag:reload], 3, NONE, NONE, [archetype:mundane]),
+('sledgehammer', 'weapon', 'Sledgehammer', [tag:3harm, tag:hand, tag:messy], 3, NONE, NONE, [archetype:mundane]),
+('fireaxe', 'weapon', 'Fire axe', [tag:3harm, tag:hand, tag:messy], 3, NONE, NONE, [archetype:mundane]),
+('nunchuks', 'weapon', 'Nunchuk', [tag:2harm, tag:hand, tag:area], 2, NONE, NONE, [archetype:mundane]),
+('skateboard', 'transport', 'Skateboard', [tag:singlerider], NONE, NONE, NONE, [archetype:mundane]),
+('bicycle', 'transport', 'Bicycle', [tag:singlerider], NONE, NONE, NONE, [archetype:mundane]),
+('newcar', 'transport', 'Fairly new car', [tag:multiplerider], NONE, NONE, NONE, [archetype:mundane]),
+('classiccar', 'transport', 'Classic car', [tag:multiplerider, tag:unreliable], NONE, NONE, NONE, [archetype:mundane, archetype:wronged]),
+('motorcycle', 'transport', 'Motorcycle', [tag:dualrider], NONE, NONE, NONE, [archetype:mundane, archetype:wronged]),
+('van', 'transport', 'Van', [tag:multiplerider, tag:spacious], NONE, NONE, NONE, [archetype:mundane, archetype:wronged]),
+('truck', 'transport', 'Pickup truck', [tag:dualrider, tag:spacious], NONE, NONE, NONE, [archetype:wronged]),
+('flakvest', 'armor', 'Flak vest', [tag:1armor, tag:hidden], NONE, NONE, 1, [archetype:professional]),
+('combatarmor', 'armor', 'Combat armor', [tag:2armor, tag:heavy], NONE, NONE, 2, [archetype:professional]),
+('assaultrifle', 'weapon', 'Assault rifle', [tag:3harm, tag:far, tag:automatic, tag:loud], 3, NONE, NONE, [archetype:professional, archetype:wronged]),
+('grenadelauncher', 'weapon', 'Grenade launcher', [tag:4harm, tag:far, tag:area, tag:messy, tag:loud, tag:reload], 4, NONE, NONE, [archetype:professional]),
+('bigsniperrifle', 'weapon', 'Large-caliber sniper rifle', [tag:4harm, tag:far], 4, NONE, NONE, [archetype:professional]),
+('grenades', 'weapon', 'Grenades', [tag:4harm, tag:close, tag:area, tag:messy, tag:loud, tag:many], 4, NONE, NONE, [archetype:professional]),
+('submachinegun', 'weapon', 'Submachine gun', [tag:3harm, tag:close, tag:automatic, tag:loud], 3, NONE, NONE, [archetype:professional]),
+('sawnoffshotgun', 'weapon', 'Sawn-off shotgun', [tag:3harm, tag:hand, tag:close, tag:messy, tag:loud, tag:reload], 3, NONE, NONE, [archetype:wronged]),
+('handcannon', 'weapon', 'Hand cannon', [tag:3harm, tag:close, tag:loud], 3, NONE, NONE, [archetype:wronged]),
+('hugeaxe', 'weapon', 'Huge axe', [tag:3harm, tag:hand, tag:messy, tag:heavy], 3, NONE, NONE, [archetype:wronged]),
+('chainsaw', 'weapon', 'Chainsaw', [tag:3harm, tag:hand, tag:messy, tag:unreliable, tag:loud, tag:heavy], 3, NONE, NONE, [archetype:wronged]);

@@ -12,7 +12,7 @@ DEFINE TABLE tag SCHEMAFULL
         FOR update, delete WHERE owner = $auth.id;
 
 DEFINE FIELD category ON TABLE tag TYPE array;
-    DEFINE FIELD category.* ON TABLE tag TYPE string ASSERT $value INSIDE ['harm', 'range', 'descriptive', 'material', 'armor'];
+    DEFINE FIELD category.* ON TABLE tag TYPE string ASSERT $value INSIDE ['harm', 'range', 'descriptive', 'material', 'armor', 'transport'];
 
 DEFINE FIELD name ON TABLE tag TYPE string ASSERT $value IS NOT NONE;
 
@@ -48,7 +48,7 @@ INSERT INTO tag
 ('intimate', ['range'], 'intimate', 'Effective at the closest of quarters - within the embrace of your foe.'),
 ('loud', ['descriptive'], 'loud', 'Loud enough that it draws attention.'),
 ('magic', ['descriptive'], 'magic', 'Enchanted. Can affect certain creatures that are immune to normal weapons.'),
-('many', ['descriptive'], 'many', 'Small enough that you can carry a large number of them.'),
+('many', ['descriptive'], 'many', 'Small enough that you can carry multiple around.'),
 ('messy', ['descriptive'], 'messy', 'Spreads a lot of blood and gore around.'),
 ('quick', ['descriptive'], 'quick', 'Quick to prepare and attack with.', [tag:slow]),
 ('reload', ['descriptive'], 'reload', 'Has limited ammunition - may run out at a bad time and need to be reloaded.'),
@@ -59,14 +59,20 @@ INSERT INTO tag
 ('valuable', ['descriptive'], 'valuable', 'Antique, or made of valuable materials.'),
 ('volatile', ['descriptive'], 'volatile', 'Dangerous and unstable - prone to backfire!', [tag:balanced]),
 ('steel', ['descriptive', 'material'], 'steel', 'Made of steel.'),
-('coldiron', ['descriptive', 'material'], 'cold iron', 'Made of cold iron.'),
+('iron', ['descriptive', 'material'], 'cold iron', 'Made of cold iron.'),
 ('silver', ['descriptive', 'material'], 'silver', 'Made of silver.'),
 ('wood', ['descriptive', 'material'], 'wood', 'Made of wood.'),
 ('stone', ['descriptive', 'material'], 'stone', 'Made of stone.'),
 ('bone', ['descriptive', 'material'], 'bone', 'Made of bone.'),
 ('teeth', ['descriptive', 'material'], 'teeth', 'Made of teeth.'),
 ('obsidian', ['descriptive', 'material'], 'obsidian', 'Made of obsidian.'),
-('oldfashioned', ['descriptive'], 'old-fashioned', 'Old-school.'),
-('modern', ['descriptive'], 'modern', 'Modern.');
+('oldfashioned', ['descriptive'], 'old-fashioned', 'Old-school.', [tag:modern]),
+('modern', ['descriptive'], 'modern', 'Modern.', [tag:oldfashioned]),
+('natural', ['descriptive', 'material'], 'natural', "Maybe they're born with it..."),
+('singlerider', ['transport', 'descriptive'], 'single rider', 'Can only fit a single rider.', [tag:dualrider, tag:multiplerider]),
+('dualrider' ['transport', 'descriptive'], 'dual rider', 'Can fit up to 2 passengers, including the driver.', [tag:singlerider, tag:multiplerider]),
+('multiplerider', ['transport', 'descriptive'], 'multiple rider', 'Can fit 3-5 passengers, including the driver.', [tag:singlerider, tag:dualrider]),
+('spacious', ['transport', 'descriptive'], 'spacious', 'This baby can haul A LOT.', [tag:singlerider, tag:dualrider]),
+('specialist', ['descriptive'], 'specialist', 'Effective against certain foes, but near useless for others.');
 
 

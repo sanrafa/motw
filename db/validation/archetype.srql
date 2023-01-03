@@ -266,15 +266,36 @@ breed: {
             desc: "You have an evil lord who doesn't know you changed sides. They still give you orders, and do not tolerate refusal. Or failure."
         }
     ],
-    /* Convert into weapon tags */
+    /* Convert into weapon gear */
     natural_attacks: [
-        "Base: teeth (3-harm intimate)",
-        "Base: claws (2-harm hand)",
-        "Base: life-drain (1-harm intimate healing)",
-        "Base: magical force (1-harm magical close)",
-        "Add +1 harm to a base",
-        "Add ignore-armour to a base",
-        "Add an extra range to a base"
+        {
+            desc: "Base: teeth (3-harm intimate)",
+            entity: gear:`base-teeth`
+        },
+        {
+            desc: "Base: claws (2-harm hand)",
+            entity: gear:`base-claws`
+        },
+        {
+            desc: "Base: life-drain (1-harm intimate healing)",
+            entity: gear:`base-lifedrain`
+        },
+        {
+            desc: "Base: magical force (1-harm magical close)",
+            entity: gear:`base-magicalforce`
+        },
+        {
+            desc: "Add +1 harm to a base",
+            entity: tag:1harm
+        },
+        {
+            desc: "Add ignore-armour to a base",
+            entity: tag:ignorearmor
+        },
+        {
+            desc: "Add an extra range to a base (add intimate, hand, or close).",
+            entity: [tag:intimate, tag:hand, tag:close]
+        }
     ]
 },
 ratings: [
