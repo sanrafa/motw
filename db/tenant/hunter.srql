@@ -23,13 +23,13 @@ DEFINE FIELD attributes.available_moves ON TABLE hunter TYPE array ASSERT $value
 -- Chosen specific
 DEFINE FIELD attributes.fate ON TABLE hunter TYPE object VALUE NULL OR $after;
     DEFINE FIELD attributes.fate.found_out ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT fate.found_out from archetype:chosen);
-    DEFINE FIELD attributes.fate.doom ON TABLE hunter TYPE array ASSERT array::len($value) == 2;
+    DEFINE FIELD attributes.fate.doom ON TABLE hunter TYPE array ASSERT array::len($value) <= 2;
         DEFINE FIELD attributes.fate.doom.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT fate.doom FROM archetype:chosen);
     DEFINE FIELD attributes.fate.heroic ON TABLE hunter TYPE array ASSERT array::len($value) == 2;
         DEFINE FIELD attributes.fate.heroic.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT fate.heroic FROM archetype:chosen);
 
 -- Expert specific
-DEFINE FIELD attributes.haven ON TABLE hunter TYPE array VALUE NONE OR $after ASSERT $value IS NONE OR ($this.archetype = archetype:expert AND array::len($value) = 3);
+DEFINE FIELD attributes.haven ON TABLE hunter TYPE array VALUE NONE OR $after ASSERT $value IS NONE OR ($this.archetype = archetype:expert OR $this.improvements CONTAINSANY [improvement:flake07, improvement:monstrous07, improvement:spooky08, improvement:wronged07]);
     DEFINE FIELD attributes.haven.* ON TABLE hunter TYPE record(haven);
 
 -- Initiate specific
@@ -53,7 +53,7 @@ DEFINE FIELD attributes.breed ON TABLE hunter TYPE object VALUE NONE OR $after A
 DEFINE FIELD attributes.agency ON TABLE hunter TYPE object VALUE NONE OR $after ASSERT $value IS NONE OR $this.attributes.archetype = archetype:professional;
     DEFINE FIELD attributes.agency.description ON TABLE hunter TYPE string;
     DEFINE FIELD attributes.agency.goal ON TABLE hunter TYPE string;
-    DEFINE FIELD attributes.agency.resources ON TABLE hunter TYPE array ASSERT array::len($value) = 2;
+    DEFINE FIELD attributes.agency.resources ON TABLE hunter TYPE array ASSERT array::len($value) = 3;
         DEFINE FIELD attributes.agency.resources.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT agency.resources FROM archetype:professional);
     DEFINE FIELD attributes.agency.red_tape ON TABLE hunter TYPE array ASSERT array::len($value) = 2;
         DEFINE FIELD attributes.agency.red_tape.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT agency.red_tape FROM archetype:professional);
@@ -88,11 +88,21 @@ DEFINE FIELD attributes.harm ON TABLE hunter TYPE object;
     DEFINE FIELD attributes.harm.unstable ON TABLE hunter TYPE bool VALUE $after OR false;
 
 DEFINE FIELD attributes.ratings ON TABLE hunter TYPE object;
-    DEFINE FIELD attributes.ratings.charm ON TABLE hunter TYPE int ASSERT $value > -1 AND $value <= 3;
-    DEFINE FIELD attributes.ratings.cool ON TABLE hunter TYPE int ASSERT $value > -1 AND $value <= 3;
-    DEFINE FIELD attributes.ratings.sharp ON TABLE hunter TYPE int ASSERT $value > -1 AND $value <= 3;
-    DEFINE FIELD attributes.ratings.tough ON TABLE hunter TYPE int ASSERT $value > -1 AND $value <= 3;
-    DEFINE FIELD attributes.ratings.weird ON TABLE hunter TYPE int ASSERT $value > -1 AND $value <= 3;
+    DEFINE FIELD attributes.ratings.charm ON TABLE hunter TYPE object;
+        DEFINE FIELD attributes.ratings.charm.score ON TABLE hunter TYPE int ASSERT $value >= -1 AND $value <= 3;
+        DEFINE FIELD attributes.ratings.charm.highlight ON TABLE hunter TYPE bool VALUE false OR $after;
+    DEFINE FIELD attributes.ratings.cool ON TABLE hunter TYPE object;
+        DEFINE FIELD attributes.ratings.cool.score ON TABLE hunter TYPE int ASSERT $value >= -1 AND $value <= 3;
+        DEFINE FIELD attributes.ratings.cool.highlight ON TABLE hunter TYPE bool VALUE false OR $after;
+    DEFINE FIELD attributes.ratings.sharp ON TABLE hunter TYPE object;
+        DEFINE FIELD attributes.ratings.sharp.score ON TABLE hunter TYPE int ASSERT $value >= -1 AND $value <= 3;
+        DEFINE FIELD attributes.ratings.sharp.highlight ON TABLE hunter TYPE bool VALUE false OR $after;
+    DEFINE FIELD attributes.ratings.tough ON TABLE hunter TYPE object;
+        DEFINE FIELD attributes.ratings.tough.score ON TABLE hunter TYPE int ASSERT $value >= -1 AND $value <= 3;
+        DEFINE FIELD attributes.ratings.tough.highlight ON TABLE hunter TYPE bool VALUE false OR $after;
+    DEFINE FIELD attributes.ratings.weird ON TABLE hunter TYPE object;
+        DEFINE FIELD attributes.ratings.weird.score ON TABLE hunter TYPE int ASSERT $value >= -1 AND $value <= 3;
+        DEFINE FIELD attributes.ratings.weird.highlight ON TABLE hunter TYPE bool VALUE false OR $after;
 
 
 DEFINE EVENT harm_changed ON TABLE hunter WHEN $before.attributes.harm.points != $after.attributes.harm.points THEN (
