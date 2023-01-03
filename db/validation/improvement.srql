@@ -123,5 +123,13 @@ INSERT INTO improvement
 ('adv02', NONE, "Change Your Hunter To A New Type", "When you change your type, pick another playbook you wish to change to. Your ratings and history stay the same. You may change your name or look, if you want. For your old moves, check each one and decide (with the Keeper) if it is intrinsic to who you are, or just something you did for a while. If it's intrinsic, keep that move. If not, erase it. Then add new moves from your new playbook, as if you were creating a new hunter. Finally, you may or may not get the new gear, or keep your old gear, depending what makes sense given the circumstances of your change.", true),
 ('adv03', NONE, "Make A Second Hunter", "Create a new hunter to join the team. You can play both hunters at once, or maybe take turns, deciding which will come along on a mystery on a case-by-case basis. Make up the new hunter as normal, except for history. Only pick history for the hunters played by different people - don't tie your ownhunters together with history picks.", true),
 ('adv04', NONE, "Retire To Safety", "Your hunter retires to a safe place. They no longer actively hunt monsters, and have found a place to live that's safe from old enemies. Give your hunter to the Keeper to look after from now on. They are safe from the Keeper's threats, and never count as a threat themselves. Your retired hunter might, at your and the Keeper's discretion, count as an ally for the other hunters.", true),
-('adv05', NONE, "Erase One Used Luck Mark", "Erase a used Luck mark from your sheet. You have bought some time before Fate comes for you.", false),
-('adv06', NONE, "Mark Two Of Your Basic Moves As Advanced", "This means you get better at the basic moves. There's a new result for each advanced move, that applies when you roll a 12 or higher. These 12+ results represent the extraordinary levels of success you can now achieve.", false);
+('adv05', NONE, "Erase One Used Luck Mark", "Erase a used Luck mark from your sheet. You have bought some time before Fate comes for you.", true),
+('adv06', NONE, "Mark Two Of Your Basic Moves As Advanced", "This means you get better at the basic moves. There's a new result for each advanced move, that applies when you roll a 12 or higher. These 12+ results represent the extraordinary levels of success you can now achieve.", true),
+('adv_act', NONE, NONE, 'Advanced Act Under Pressure', true),
+('adv_help', NONE, NONE, 'Advanced Help Out', true),
+('adv_kickass', NONE, NONE, 'Advanced Kick Some Ass', true),
+('adv_protect', NONE, NONE, 'Advanced Protect Someone', true),
+('adv_manipulate', NONE, NONE, 'Advanced Manipulate Someone', true),
+('adv_investigate', NONE, NONE, 'Advanced Investigate a Mystery', true),
+('adv_readsituation', NONE, NONE, 'Advanced Read a Bad Situation', true),
+('adv_usemagic', NONE, NONE, 'Advanced Use Magic', true);

@@ -81,6 +81,7 @@ DEFINE FIELD attributes.improvements ON TABLE hunter TYPE array;
     DEFINE FIELD attributes.improvements.* ON TABLE hunter TYPE record(improvements);
 
 DEFINE FIELD attributes.ongoing ON TABLE hunter TYPE int VALUE $after OR 0;
+DEFINE FIELD attributes.hold ON TABLE hunter TYPE int VALUE $after OR 0;
 DEFINE FIELD attributes.forward ON TABLE hunter TYPE bool VALUE $after OR false;
 
 DEFINE FIELD attributes.harm ON TABLE hunter TYPE object;
