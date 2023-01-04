@@ -1,5 +1,5 @@
 // Validation table for Expert havens
-
+REMOVE TABLE haven;
 DEFINE TABLE haven SCHEMAFULL
     PERMISSIONS
         FOR select FULL

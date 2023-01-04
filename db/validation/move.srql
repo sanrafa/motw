@@ -1,6 +1,6 @@
 /// HUNTER MOVE VALIDATION TABLE
 ///// Available Hunter moves
-
+REMOVE TABLE move;
 DEFINE TABLE move SCHEMAFULL
     PERMISSIONS
         FOR select, create FULL

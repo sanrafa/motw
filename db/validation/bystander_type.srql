@@ -1,0 +1,22 @@
+// Bystander type validation table
+REMOVE TABLE bystander_type;
+DEFINE TABLE bystander_type SCHEMAFULL
+    PERMISSIONS
+        FOR select FULL
+        FOR create, update, delete NONE;
+
+DEFINE FIELD name ON TABLE bystander_type TYPE string ASSERT $value IS NOT NONE;
+
+DEFINE FIELD motivation ON TABLE bystander_type TYPE string ASSERT $value IS NOT NONE;
+
+INSERT INTO bystander_type
+(id, name, motivation) VALUES
+('busybody', "Busybody", "to interfere in other people's plans"),
+('detective', "Detective", "to rule out explanations"),
+('gossip', "Gossip", "to pass on rumors"),
+('helper', "Helper", "to join the hunt"),
+('innocent', "Innocent", "to do the right thing"),
+('official', "Official", "to be suspicious"),
+('skeptic', "Skeptic", "to deny supernatural explanations"),
+('victim', "Victim", "to put themselves in danger"),
+('witness', "Witness", "to reveal information");

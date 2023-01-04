@@ -1,6 +1,6 @@
 /// MONSTER ARCHETYPE VALIDATION TABLE
 ///// Validation table of available monster playbooks
-
+REMOVE TABLE monster_type;
 DEFINE TABLE monster_type SCHEMAFULL
     PERMISSIONS
         FOR select FULL

@@ -1,6 +1,6 @@
 /// HUNTER IMPROVEMENT VALIDATION TABLE
 ///// Validation table of available improvements
-
+REMOVE TABLE improvement;
 DEFINE TABLE improvement SCHEMAFULL
     PERMISSIONS
         FOR create FULL

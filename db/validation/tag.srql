@@ -5,7 +5,7 @@
 -- Desc: tag description
 -- Conflicts: cannot be used with these tags
 -- Owner: Keepers can create and save custom tags
-
+REMOVE TABLE tag;
 DEFINE TABLE tag SCHEMAFULL
     PERMISSIONS 
         FOR create, select WHERE owner IS NONE OR owner = $auth.id

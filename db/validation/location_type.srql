@@ -1,0 +1,23 @@
+// Location type validation table
+REMOVE TABLE location_type;
+DEFINE TABLE location_type SCHEMAFULL
+    PERMISSIONS
+        FOR select FULL
+        FOR create, update, delete NONE;
+
+DEFINE FIELD name ON TABLE location_type TYPE string ASSERT $value IS NOT NONE;
+
+DEFINE FIELD motivation ON TABLE location_type TYPE string ASSERT $value IS NOT NONE;
+
+INSERT INTO location_type
+(id, name, motivation) VALUES
+('crossroads', "Crossroads", "to bring people, and things, together"),
+('deathtrap', "Deathtrap", "to harm intruders"),
+('den', "Den", "to harbor monsters"),
+('fortress', "Fortress", "to deny entry"),
+('hellgate', "Hellgate", "to create evil"),
+('hub', "Hub", "to reveal information"),
+('lab', "Lab", "to create weirdness"),
+('maze', "Maze", "to confuse and separate"),
+('prison', "Prison", "to constrain and prevent exit"),
+('wilds', "Wilds", "to contain hidden things");

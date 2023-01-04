@@ -1,6 +1,6 @@
 /// MINION ARCHETYPE VALIDATION TABLE
 ///// Available minion playbooks
-
+REMOVE TABLE minion_type;
 DEFINE TABLE minion_type SCHEMAFULL
     PERMISSIONS
         FOR select FULL

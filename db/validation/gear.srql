@@ -10,6 +10,7 @@
 -- playbook: approved hunter types, if applicable
 -- owner: creator if custom
 
+REMOVE TABLE gear;
 DEFINE TABLE gear SCHEMAFULL
     PERMISSIONS
         FOR create, select FULL
