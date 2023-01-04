@@ -70,7 +70,7 @@ INSERT INTO tag
 ('modern', ['descriptive'], 'modern', 'Modern.', [tag:oldfashioned]),
 ('natural', ['descriptive', 'material'], 'natural', "Maybe they're born with it..."),
 ('singlerider', ['transport', 'descriptive'], 'single rider', 'Can only fit a single rider.', [tag:dualrider, tag:multiplerider]),
-('dualrider' ['transport', 'descriptive'], 'dual rider', 'Can fit up to 2 passengers, including the driver.', [tag:singlerider, tag:multiplerider]),
+('dualrider', ['transport', 'descriptive'], 'dual rider', 'Can fit up to 2 passengers, including the driver.', [tag:singlerider, tag:multiplerider]),
 ('multiplerider', ['transport', 'descriptive'], 'multiple rider', 'Can fit 3-5 passengers, including the driver.', [tag:singlerider, tag:dualrider]),
 ('spacious', ['transport', 'descriptive'], 'spacious', 'This baby can haul A LOT.', [tag:singlerider, tag:dualrider]),
 ('specialist', ['descriptive'], 'specialist', 'Effective against certain foes, but near useless for others.');

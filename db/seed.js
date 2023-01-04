@@ -1,21 +1,27 @@
-import { readdirSync } from 'fs';
+import { readdirSync, readFileSync } from 'fs';
 import path from 'path';
+import Surreal from 'surrealdb.js';
 
-const serverDir = path.resolve();
-const pwd = `${serverDir}/db`;
+const db = new Surreal('http://127.0.0.1:8000/rpc');
 
-function setupValidationTables() {
-	const DIR = `${pwd}/validation`;
+const DB_DIR = `${path.resolve()}/db`;
+
+async function setupValidationTables() {
+	const queryFilenames = readdirSync(`${DB_DIR}/validation`);
+	const queryFilePaths = queryFilenames.map((file) => `${DB_DIR}/validation/${file}`);
+
 	try {
-		const files = readdirSync(DIR);
-		const validationfiles = files.map((file) => `${DIR}/${file}`);
-		validationfiles.forEach((filename) => {
-			console.log(filename);
-		});
-	} catch (err) {
-		console.log('Error creating validation tables!');
-		console.error(err);
+		await db.signin({ user: 'root', pass: 'root' });
+		await db.use('dev', 'dev');
+		for (const file of queryFilePaths) {
+			console.log('Querying:', file);
+			const query = readFileSync(file, 'utf-8');
+			await db.query(query);
+		}
+	} catch (e) {
+		console.error(e);
 	}
+	console.log('Validation tables added!');
 }
 
-setupValidationTables();
+setupValidationTables().then(() => db.close());
