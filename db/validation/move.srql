@@ -6,11 +6,11 @@ DEFINE TABLE move SCHEMAFULL
         FOR select, create FULL
         FOR update, delete WHERE owner = $auth.id;
 
-DEFINE FIELD archetype ON TABLE move TYPE record(archetype) VALUE NONE OR $after;
+DEFINE FIELD playbook ON TABLE move TYPE record(playbook) VALUE NONE OR $after;
 
 DEFINE FIELD title ON TABLE move TYPE string ASSERT $value IS NOT NONE;
 
-DEFINE FIELD desc ON TABLE move TYPE string ASSERT $value IS NOT NONE;
+DEFINE FIELD desc ON TABLE move TYPE string ASSERT $value IS NOT NONE; -- in HTML for easier formatting
 
 DEFINE FIELD outcomes ON TABLE move TYPE object;
     DEFINE FIELD outcomes.miss ON TABLE move TYPE string; -- 0-6
@@ -23,7 +23,15 @@ DEFINE FIELD holds ON TABLE move TYPE array VALUE NONE OR $after;
 
 DEFINE FIELD rating ON TABLE move TYPE string ASSERT $value IS NULL OR $value INSIDE ["charm", "cool", "sharp", "tough", "weird"];
 
+DEFINE FIELD trigger_on_start ON TABLE move TYPE bool VALUE false OR $after;
+
 DEFINE FIELD owner ON TABLE move TYPE record(user) VALUE NONE OR $after;
+
+DEFINE TABLE custom_move AS 
+    SELECT * FROM move WHERE owner IS NOT NONE
+    PERMISSIONS
+        FOR create FULL
+        FOR select, update, delete WHERE owner = $auth.id;
 
 CREATE move:act CONTENT {
     title: "Act Under Pressure",
@@ -124,183 +132,183 @@ CREATE move:usemagic CONTENT {
 };
 
 INSERT INTO move 
-(id, archetype, title, desc, outcomes, holds, rating) VALUES
-('destiny', archetype:chosen, "Destiny's Plaything", "At the beginning of each mystery, roll +Weird to see what is revealed about your immediate future.", {
+(id, playbook, title, desc, outcomes, holds, rating, trigger_on_start) VALUES
+('destiny', playbook:chosen, "Destiny's Plaything", "At the beginning of each mystery, roll +Weird to see what is revealed about your immediate future.", {
     miss: "Something bad is going to happen to you.",
     poor: "You'll receive a vague hint.",
     good: "The Keeper will reveal a useful detail about the coming mystery."
-}, NONE, "weird"),
-('reason', archetype:chosen, "I'm Here For A Reason", "There's something you are destined to do. Work out the details with the Keeper, based on your fate. You cannot die until it comes to pass. <strong>If you die in play, then you must spend a Luck point. You will then, somehow, recover or get returned to life.</strong> Once your task is done (or you use up all your Luck), all bets are off.", NONE, NONE, NULL),
-('bigentrance', archetype:chosen, "The Big Entrance", "Make a showy entrance into a dangerous situation, roll +Cool. Your speech could be a showstopper.", {
+}, NONE, "weird", true),
+('reason', playbook:chosen, "I'm Here For A Reason", "There's something you are destined to do. Work out the details with the Keeper, based on your fate. You cannot die until it comes to pass. <strong>If you die in play, then you must spend a Luck point. You will then, somehow, recover or get returned to life.</strong> Once your task is done (or you use up all your Luck), all bets are off.", NONE, NONE, NULL),
+('bigentrance', playbook:chosen, "The Big Entrance", "Make a showy entrance into a dangerous situation, roll +Cool. Your speech could be a showstopper.", {
     miss: "You're marked as the biggest threat by all.",
     poor: "You pick one person or monster to stop, watch and listen until you finish talking.",
     good: "Everyone stops to watch and listen until you finish your opening speech."
 }, NONE, "cool"),
-('devastating', archetype:chosen, "Devastating", "When <em>you inflict harm</em>, you may inflict +1 harm.", NONE, NONE, NULL),
-('acceptance', archetype:chosen, "Acceptance", "<em>When your fate rears its ugly head, and you act in accordance with any of your fate tags (heroic or doom)</em>, you gain experience.", NONE, NONE, NULL),
-('invincible', archetype:chosen, "Invincible", "You always count as having 2-armor. (This doesn't stack with other protection).", NONE, NONE, NULL),
-('resilience', archetype:chosen, "Resilience", "You heal faster than normal people. Any time your harm gets healed, heal an extra point. Additionally, your wounds count as 1-harm less for the purpose of the Keeper's harm moves.", NONE, NONE, NULL),
-('readaboutthis', archetype:expert, "I've Read About This Sort Of Thing", "Roll +Sharp instead of +Cool when you <em>act under pressure.</em>", NONE, NONE, "sharp"),
-('oftenright', archetype:expert, "Often Right", "When <em>a hunter comes to you for advice about a problem,</em> give them your honest opinion and advice. If they take your advice, they get +1 ongoing while following your advice, and you gain experience.", NONE, NONE, NULL),
-('preparedness', archetype:expert, "Preparedness", "<em>When you need something unusual or rare</em>, roll +Sharp and you might get it.", {
+('devastating', playbook:chosen, "Devastating", "When <em>you inflict harm</em>, you may inflict +1 harm.", NONE, NONE, NULL),
+('acceptance', playbook:chosen, "Acceptance", "<em>When your fate rears its ugly head, and you act in accordance with any of your fate tags (heroic or doom)</em>, you gain experience.", NONE, NONE, NULL),
+('invincible', playbook:chosen, "Invincible", "You always count as having 2-armor. (This doesn't stack with other protection).", NONE, NONE, NULL),
+('resilience', playbook:chosen, "Resilience", "You heal faster than normal people. Any time your harm gets healed, heal an extra point. Additionally, your wounds count as 1-harm less for the purpose of the Keeper's harm moves.", NONE, NONE, NULL),
+('readaboutthis', playbook:expert, "I've Read About This Sort Of Thing", "Roll +Sharp instead of +Cool when you <em>act under pressure.</em>", NONE, NONE, "sharp"),
+('oftenright', playbook:expert, "Often Right", "When <em>a hunter comes to you for advice about a problem,</em> give them your honest opinion and advice. If they take your advice, they get +1 ongoing while following your advice, and you gain experience.", NONE, NONE, NULL),
+('preparedness', playbook:expert, "Preparedness", "<em>When you need something unusual or rare</em>, roll +Sharp and you might get it.", {
     miss: "You find out where it is, but it's somewhere real bad.",
     poor: "You find it, but it'll take some time to get it.",
     good: "You want it, you got it - right here, right now."
 }, NONE, "sharp"),
-('wasntasbad', archetype:expert, "It Wasn't As Bad As It Looked", "Once per mystery, you may roll +Cool and <em>attempt to keep going despite your injuries.</em>", {
+('wasntasbad', playbook:expert, "It Wasn't As Bad As It Looked", "Once per mystery, you may roll +Cool and <em>attempt to keep going despite your injuries.</em>", {
     miss: "Your injuries are worse than you thought.",
     poor: "You may stabilize or heal 1 harm.",
     good: "Heal 2 harm and stabilize your wounds."
 }, NONE, "cool"),
-('precisestrike', archetype:expert, "Precise Strike", "When fighting a monster, you can roll +Tough and <em>aim for their weak spot.</em>", {
+('precisestrike', playbook:expert, "Precise Strike", "When fighting a monster, you can roll +Tough and <em>aim for their weak spot.</em>", {
     miss: "You leave yourself open and the monster hits you.",
     poor: "You inflict +1 harm.",
     good: "You inflict +2 harm."
 }, NONE, "tough"),
-('theplan', archetype:expert, "The One With The Plan", "<em>At the beginning of each mystery</em>, roll +Sharp.", {
+('theplan', playbook:expert, "The One With The Plan", "<em>At the beginning of each mystery</em>, roll +Sharp.", {
     miss: "The Keeper holds 1 they can spend to have you in the wrong place, unprepared and unready.",
     poor: "Hold 1 - spend it on executing a plan to be where you need to be, prepared and ready.",
     good: "Hold 2 - spend it on executing a plan to be where you need to be, prepared and ready.",
-}, NONE, "sharp"),
-('darkpast', archetype:expert, "Dark Past", "You dabbled in the worst sort of mystical arts before you became one of the good guys. You can roll +Weird and <em>trawl through your memories</em> for something relevant to the case at hand.", {
+}, NONE, "sharp", true),
+('darkpast', playbook:expert, "Dark Past", "You dabbled in the worst sort of mystical arts before you became one of the good guys. You can roll +Weird and <em>trawl through your memories</em> for something relevant to the case at hand.", {
     miss: "You can ask a question, but you discover you were personally complicit in creating the situation you're dealing with now.",
     poor: "Ask the Keeper 1 question.",
     good: "Ask the Keeper 2 questions."
 }, ["When I dealt with this creature (or one of its kind), what did I learn?", "What black magic do I know that could help here?", "Do I know anyone who might be behind this?", "Who do I know who can help us right now?"], "weird"),
-('connectthedots', archetype:flake, "Connect the Dots", "At the beginning of each mystery, you get to roll +Sharp and <em>look for the wider patterns</em> that current events might be a part of. You may receive a hold you can spend to receive answers later in the mystery.", {
+('connectthedots', playbook:flake, "Connect the Dots", "At the beginning of each mystery, you get to roll +Sharp and <em>look for the wider patterns</em> that current events might be a part of. You may receive a hold you can spend to receive answers later in the mystery.", {
     miss: "It's too complicated for your tiny brain.",
     poor: "Hold 1, ask a question later.",
     good: "Hold 3, ask questions later."
-}, ["Is this person connected to current events more than they are saying?", "When and where will the next critical event occur?", "What does the monster want from this person?", "Is this connected to previous mysteries we have investigated?", "How does this mystery connect to the bigger picture?"], "sharp"),
-('crazyeyes', archetype:flake, "Crazy Eyes", "You get +1 Weird (max +3)", NONE, NONE, NULL),
-('fitstogether', archetype:flake, "See, It All Fits Together", "You can use Sharp instead of Charm when you <em>manipulate someone.</em>", NONE, NONE, NULL),
-('suspiciousmind', archetype:flake, "Suspicious Mind", "If someone lies to you, you'll know it.", NONE, NONE, NULL),
-('overlooked', archetype:flake, "Often Overlooked", "When you want to avoid something, like a confrontation, <em>act a little sanity-challenged</em> and you might get out of it.", {
+}, ["Is this person connected to current events more than they are saying?", "When and where will the next critical event occur?", "What does the monster want from this person?", "Is this connected to previous mysteries we have investigated?", "How does this mystery connect to the bigger picture?"], "sharp", true),
+('crazyeyes', playbook:flake, "Crazy Eyes", "You get +1 Weird (max +3)", NONE, NONE, NULL),
+('fitstogether', playbook:flake, "See, It All Fits Together", "You can use Sharp instead of Charm when you <em>manipulate someone.</em>", NONE, NONE, NULL),
+('suspiciousmind', playbook:flake, "Suspicious Mind", "If someone lies to you, you'll know it.", NONE, NONE, NULL),
+('overlooked', playbook:flake, "Often Overlooked", "When you want to avoid something, like a confrontation, <em>act a little sanity-challenged</em> and you might get out of it.", {
     miss: "You draw lots of unintended attention.",
     poor: "Pick one. The target regards you as: <em>unthreatening</em> or <em>unimportant</em>?",
     good: "The target regards you as unthreatening and uninteresting."
 }, NONE, "weird"),
-('contrary', archetype:flake, "Contrary", "<em>When you seek out and receive someone's honest advice</em> on the best course of action for you, mark experience if you do something instead. If you do the exact opposite, accept +1 ongoing for any moves you take pursuing that end.", NONE, NONE, NULL),
-('netfriends', archetype:flake, "Net Friends", "You've got a lot of internet friends. Roll +Charm to contact one to help you with a mystery - they may be skilled hackers.", {
+('contrary', playbook:flake, "Contrary", "<em>When you seek out and receive someone's honest advice</em> on the best course of action for you, mark experience if you do something instead. If you do the exact opposite, accept +1 ongoing for any moves you take pursuing that end.", NONE, NONE, NULL),
+('netfriends', playbook:flake, "Net Friends", "You've got a lot of internet friends. Roll +Charm to contact one to help you with a mystery - they may be skilled hackers.", {
     miss: "Oof - they refuse to help and you've burnt some bridges.",
     poor: "They're down to help, but it's either going to take time or you're going to have to contribute somehow.",
     good: "They're available and helpful."
 }, NONE, "charm"),
-('sneaky', archetype:flake, "Sneaky", "Inflict +2 harm when you ambush an enemy.", NONE, NONE, NULL),
-('initiate', archetype:initiate, "Initiate", "When you are in <em>good standing with your Sect,</em> roll +Charm at the beginning of each mystery. You'll likely receive a mission - it could go smoothly, or be a burden. Either way, you can't fail and will face consequences should you refuse.", {
+('sneaky', playbook:flake, "Sneaky", "Inflict +2 harm when you ambush an enemy.", NONE, NONE, NULL),
+('initiate', playbook:initiate, "Initiate", "When you are in <em>good standing with your Sect,</em> roll +Charm at the beginning of each mystery. You'll likely receive a mission - it could go smoothly, or be a burden. Either way, you can't fail and will face consequences should you refuse.", {
     miss: "Your sect asks you to do something that compromises your morals.",
     poor: "Your mission is related to the mystery, and you could earn some info or help if you do it.",
     good: "No current assignments. It's a slow period, so they can afford to provide some useful info or help in the field."
-}, NONE, "charm"),
-('ancientarts', archetype:initiate, "Ancient Fighting Arts", "When using an old-fashioned hand weapon, inflict +1 harm and receive +1 whenever you roll to <em>protect someone.</em>", NONE, NONE, NULL),
-('mystic', archetype:initiate, "Mystic", "Every time you successfully <em>use magic</em>, gain +1 forward.", NONE, NONE, NULL),
-('fortunes', archetype:initiate, "Fortunes", "The Sect has ancient means to predict the future, and you may use them once per mystery. Roll +Weird to <em>look at what the future holds.</em>", {
+}, NONE, "charm", true),
+('ancientarts', playbook:initiate, "Ancient Fighting Arts", "When using an old-fashioned hand weapon, inflict +1 harm and receive +1 whenever you roll to <em>protect someone.</em>", NONE, NONE, NULL),
+('mystic', playbook:initiate, "Mystic", "Every time you successfully <em>use magic</em>, gain +1 forward.", NONE, NONE, NULL),
+('fortunes', playbook:initiate, "Fortunes", "The Sect has ancient means to predict the future, and you may use them once per mystery. Roll +Weird to <em>look at what the future holds.</em>", {
     miss: "The prediction is faulty - the Keeper decides how that affects you.",
     poor: "Hold 1, choose what the future holds for you.",
     good: "Hold 3, choose what the future holds for you."
 }, ["Have a useful object ready.", "Be somewhere you are needed, just in time.", "Take +1 forward, or give +1 forward to another hunter.", "Warn someone about an attack, so that it doesn't happen."]),
-('sacredoaths', archetype:initiate, "Sacred Oath", ": You may bind yourself to a single goal, forsaking something during your quest (e.g. speech, all sustenance but bread and water, alcohol, lying, sex, etc). Get the Keeper's agreement on this – it should match the goal in importance and difficulty. While you keep your oath and work towards your goal, mark experience at the end of every session and get +1 on any rolls that directly help achieve the goal. If you break the oath, take -1 ongoing until you have atoned.", NONE, NONE, NULL),
-('mentor', archetype:initiate, "Mentor", "You have a mentor in the Sect: name them. Roll +Sharp to <em>contact your mentor for info</em> - they might be of help.", {
+('sacredoaths', playbook:initiate, "Sacred Oath", ": You may bind yourself to a single goal, forsaking something during your quest (e.g. speech, all sustenance but bread and water, alcohol, lying, sex, etc). Get the Keeper's agreement on this – it should match the goal in importance and difficulty. While you keep your oath and work towards your goal, mark experience at the end of every session and get +1 on any rolls that directly help achieve the goal. If you break the oath, take -1 ongoing until you have atoned.", NONE, NONE, NULL),
+('mentor', playbook:initiate, "Mentor", "You have a mentor in the Sect: name them. Roll +Sharp to <em>contact your mentor for info</em> - they might be of help.", {
     miss: "Your question causes some trouble...",
     poor: "You choose: either they're busy and can't help, or they answer the question but you owe a favor (that the Keeper chooses).",
     good: "They answer your question, no problem."
 }, NONE, NULL),
-('apprentice', archetype:initiate, "Apprentice", "You have an apprentice: name them. Your job is to teach them the Sect's ways. They're motivated to follow your instructions to the letter.", NONE, NONE, NULL),
-('helpinghand', archetype:initiate, "Helping Hand", "When you successfully <em>help out</em> another hunter, they receive +2 instead of the usual +1.", NONE, NONE, NULL),
-('blackmagic', archetype:initiate, "That Old Black Magic", "When you <em>use magic</em>, you can ask a question from the 'investigate a mystery' move as your effect.", NONE, NONE, NULL),
-('immortal', archetype:monstrous, "Immortal", "You don't age or sicken, and whenever you suffer harm, you suffer 1-harm less.", NONE, NONE, NULL),
-('incorporeal', archetype:monstrous, "Incorporeal", "You may move freely through solid objects (but not people).", NONE, NONE, NULL),
-('unnaturalappeal', archetype:monstrous, "Unnatural Appeal", "Roll +Weird instead of +Charm when you <em>manipulate someone.</em>", NONE, NONE, NULL),
-('unholystrength', archetype:monstrous, "Unholy Strength", "Roll +Weird instead of +Tough when you <em>kick some ass.</em>", NONE, NONE, NULL),
-('preternaturalspeed', archetype:monstrous, "Preternatural Speed", "You're much faster than normal people - take +1 ongoing when you <em>chase, flee, or run.</em>", NONE, NONE, NULL),
-('clawsofthebeast', archetype:monstrous, "Claws of the Beast", "All your natural attacks get +1 harm.", NONE, NONE, NULL),
-('mentaldominion', archetype:monstrous, "Mental Dominion", "Gaze into a normal human's eyes and roll +Charm to exert your will over them. Receive holds you can spend to give them an order.", {
+('apprentice', playbook:initiate, "Apprentice", "You have an apprentice: name them. Your job is to teach them the Sect's ways. They're motivated to follow your instructions to the letter.", NONE, NONE, NULL),
+('helpinghand', playbook:initiate, "Helping Hand", "When you successfully <em>help out</em> another hunter, they receive +2 instead of the usual +1.", NONE, NONE, NULL),
+('blackmagic', playbook:initiate, "That Old Black Magic", "When you <em>use magic</em>, you can ask a question from the 'investigate a mystery' move as your effect.", NONE, NONE, NULL),
+('immortal', playbook:monstrous, "Immortal", "You don't age or sicken, and whenever you suffer harm, you suffer 1-harm less.", NONE, NONE, NULL),
+('incorporeal', playbook:monstrous, "Incorporeal", "You may move freely through solid objects (but not people).", NONE, NONE, NULL),
+('unnaturalappeal', playbook:monstrous, "Unnatural Appeal", "Roll +Weird instead of +Charm when you <em>manipulate someone.</em>", NONE, NONE, NULL),
+('unholystrength', playbook:monstrous, "Unholy Strength", "Roll +Weird instead of +Tough when you <em>kick some ass.</em>", NONE, NONE, NULL),
+('preternaturalspeed', playbook:monstrous, "Preternatural Speed", "You're much faster than normal people - take +1 ongoing when you <em>chase, flee, or run.</em>", NONE, NONE, NULL),
+('clawsofthebeast', playbook:monstrous, "Claws of the Beast", "All your natural attacks get +1 harm.", NONE, NONE, NULL),
+('mentaldominion', playbook:monstrous, "Mental Dominion", "Gaze into a normal human's eyes and roll +Charm to exert your will over them. Receive holds you can spend to give them an order.", {
     miss: "You're not as dominating as you thought.",
     poor: "Hold 1.",
     good: "Hold 3."
 }, NONE, NULL),
-('vitality', archetype:monstrous, "Unquenchable Vitality", "You can roll +Cool to heal yourself when you've taken harm.", {
+('vitality', playbook:monstrous, "Unquenchable Vitality", "You can roll +Cool to heal yourself when you've taken harm.", {
     miss: "Your injuries worsen.",
     poor: "Heal 1 harm and stabilize your injuries.",
     good: "Heal 2 harm and stabilize your injuries."
 }, NONE, NULL),
-('darknegotiator', archetype:monstrous, "Dark Negotiator", "You can use <em>manipulate someone</em> on monsters too, as long as they can reason and talk.", NONE, NONE, NULL),
-('flight', archetype:monstrous, "Flight", "You can fly.", NONE, NONE, NULL),
-('shapeshifter', archetype:monstrous, "Shapeshifter", "You may change your form - you decide the details. Gain +1 when <em>investigating a mystery</em> using the alternate form's superior senses.", NONE, NONE, NULL),
-('borrowed', archetype:monstrous, "Something Borrowed", "Take a move from a hunter playbook that isn't currently in play.", NONE, NONE, NULL),
-('victim', archetype:mundane, "Always The Victim", "When another hunter <em>protects you</em>, they mark experience. Whenever a monster captures you, you gain experience.", NONE, NONE, NULL),
-('oops', archetype:mundane, "Oops!", "If you want to stumble across something important, roll +Weird and treat the results as if you had <em>investigated a mystery</em> but anything you discover is by dumb luck.", NONE, NONE, NULL),
-('gtfoh', archetype:mundane, "Let's Get Out Of Here!", "In situations where you can <em>protect someone</em> by telling them what to do or leading them out, roll +Charm instead of +Tough.", NONE, NONE, NULL),
-('panicbutton', archetype:mundane, "Panic Button", "When you need to escape, <em>name the route you'll try</em> and roll +Sharp.", {
+('darknegotiator', playbook:monstrous, "Dark Negotiator", "You can use <em>manipulate someone</em> on monsters too, as long as they can reason and talk.", NONE, NONE, NULL),
+('flight', playbook:monstrous, "Flight", "You can fly.", NONE, NONE, NULL),
+('shapeshifter', playbook:monstrous, "Shapeshifter", "You may change your form - you decide the details. Gain +1 when <em>investigating a mystery</em> using the alternate form's superior senses.", NONE, NONE, NULL),
+('borrowed', playbook:monstrous, "Something Borrowed", "Take a move from a hunter playbook that isn't currently in play.", NONE, NONE, NULL),
+('victim', playbook:mundane, "Always The Victim", "When another hunter <em>protects you</em>, they mark experience. Whenever a monster captures you, you gain experience.", NONE, NONE, NULL),
+('oops', playbook:mundane, "Oops!", "If you want to stumble across something important, roll +Weird and treat the results as if you had <em>investigated a mystery</em> but anything you discover is by dumb luck.", NONE, NONE, NULL),
+('gtfoh', playbook:mundane, "Let's Get Out Of Here!", "In situations where you can <em>protect someone</em> by telling them what to do or leading them out, roll +Charm instead of +Tough.", NONE, NONE, NULL),
+('panicbutton', playbook:mundane, "Panic Button", "When you need to escape, <em>name the route you'll try</em> and roll +Sharp.", {
     miss: "You'll be caught halfway out.",
     poor: "You can go or change your mind and stay, but it's going to cost you if you go (you leave something behind or something follows you).",
     good: "You make it out of danger, no problem."
 }, NONE, "sharp"),
-('powerofheart', archetype:mundane, "The Power of Heart", "If you <em>help someone</em> while fighting a monster, don't roll - you automatically help as if you'd gotten a 10.", NONE, NONE, NULL),
-('trustme', archetype:mundane, "Trust Me", "When <em>you tell a person the truth to protect them from danger</em>, roll +Charm - you may need to convince them.", {
+('powerofheart', playbook:mundane, "The Power of Heart", "If you <em>help someone</em> while fighting a monster, don't roll - you automatically help as if you'd gotten a 10.", NONE, NONE, NULL),
+('trustme', playbook:mundane, "Trust Me", "When <em>you tell a person the truth to protect them from danger</em>, roll +Charm - you may need to convince them.", {
     miss: "They think you're crazy, and probably a bit dangerous yourself.",
     poor: "They ultimately listen to you, but there's a roadblock.",
     good: "They do what you say they should, no questions asked."
 }, NONE, "charm"),
-('gowrong', archetype:mundane, "What Could Go Wrong?", "Hold 2 whenever you <em>charge into immediate danger</em> without hedging your bets.", NONE, ["Inflict +1 harm", "Reduce someone's harm suffered by 1.", "Take +2 forward on an 'act under pressure' roll."], NULL),
-('dontworry', archetype:mundane, "Don't Worry, I'll Check It Out", "Whenever you <em>go off by yourself</em> to check out something scary, mark experience.", NONE, NONE, NULL),
-('dealwithagency', archetype:professional, "Deal With The Agency", "As an Agency employee, you can roll +Sharp to request help or gear - or even request leniency when you fail. It may not go over well, though.", {
+('gowrong', playbook:mundane, "What Could Go Wrong?", "Hold 2 whenever you <em>charge into immediate danger</em> without hedging your bets.", NONE, ["Inflict +1 harm", "Reduce someone's harm suffered by 1.", "Take +2 forward on an 'act under pressure' roll."], NULL),
+('dontworry', playbook:mundane, "Don't Worry, I'll Check It Out", "Whenever you <em>go off by yourself</em> to check out something scary, mark experience.", NONE, NONE, NULL),
+('dealwithagency', playbook:professional, "Deal With The Agency", "As an Agency employee, you can roll +Sharp to request help or gear - or even request leniency when you fail. It may not go over well, though.", {
     miss: "You screwed up: you might end up suspended or under investigation, or just on your superior's bad side. Either way, you ain't getting any help until you sort it out.",
     poor: "You'll get what you need, but it's not all good. You might get chewed out by your superiors, or there'll be professional fallout.",
     good: "You're good - you'll get what you requested, whether it's gear, info, or leniency."
 }, NONE, "sharp"),
-('bottleitup', archetype:professional, "Bottle It Up", "If you want it, you can take up to +3 bonus when rolling to <em>act under pressure.</em> The catch is: for every point you use, the Keeper holds 1 that they can spend to give you -1 on any move <em>except</em> act under pressure.", NONE, NONE, NULL),
-('unfazeable', archetype:professional, "Unfazeable", "Take +1 Cool (max +3).", NONE, NONE, NULL),
-('battlefield', archetype:professional, "Battlefield Awareness", "You stay vigilant in the field. Take +1 armor (max 2-armor) on top of whatever gear you have.", NONE, NONE, NULL),
-('leavenoone', archetype:professional, "Leave No One Behind", "You can roll +Sharp to <em>help someone escape in combat.</em>", {
+('bottleitup', playbook:professional, "Bottle It Up", "If you want it, you can take up to +3 bonus when rolling to <em>act under pressure.</em> The catch is: for every point you use, the Keeper holds 1 that they can spend to give you -1 on any move <em>except</em> act under pressure.", NONE, NONE, NULL),
+('unfazeable', playbook:professional, "Unfazeable", "Take +1 Cool (max +3).", NONE, NONE, NULL),
+('battlefield', playbook:professional, "Battlefield Awareness", "You stay vigilant in the field. Take +1 armor (max 2-armor) on top of whatever gear you have.", NONE, NONE, NULL),
+('leavenoone', playbook:professional, "Leave No One Behind", "You can roll +Sharp to <em>help someone escape in combat.</em>", {
     miss: "You fail to get them out of harm's way, and you've attracted hostile attention.",
     poor: "You choose: you get them out of harm's way OR you suffer no harm.",
     good: "You successfully got them of out harm's way."
 }, NONE, "sharp"),
-('tacticalgenius', archetype:professional, "Tactical Genius", "You may roll +Cool instead of +Sharp when you <em>read a bad situation.</em>", NONE, NONE, NULL),
-('medic', archetype:professional, "Medic", "You carry a full first aid kit, and have training to heal people. Roll +Cool to <em>attempt first aid.</em>", {
+('tacticalgenius', playbook:professional, "Tactical Genius", "You may roll +Cool instead of +Sharp when you <em>read a bad situation.</em>", NONE, NONE, NULL),
+('medic', playbook:professional, "Medic", "You carry a full first aid kit, and have training to heal people. Roll +Cool to <em>attempt first aid.</em>", {
     miss: "Ouch, your hand slips and you cause +1 harm to the patient.",
     poor: "Choose one: heal 1 harm OR stabilize the injury.",
     good: "The patient is stabilized and healed of 1 harm."
 }, NONE, "cool"),
-('mobility', archetype:professional, "Mobility", "You have a truck, van, or car built specifically for monster hunting. Choose the type, plus two good things and one bad thing about it.", NONE, [{
+('mobility', playbook:professional, "Mobility", "You have a truck, van, or car built specifically for monster hunting. Choose the type, plus two good things and one bad thing about it.", NONE, [{
     type: ['truck', 'van', 'car'],
     good: ['roomy', 'surveillance gear', 'fast', 'stealthy', 'intimidating', 'classic', 'medical kit', 'sleeping space', 'toolkit', 'concealed weapons', 'anonymous', 'armored (+1 armor inside)', 'tough', 'monster cage'],
     bad: ['loud', 'obvious', 'temperamental', 'beaten-up', 'gas-guzzler', 'uncomfortable', 'slow', 'old']
 }], NULL),
-('telepathy', archetype:spooky, "Telepathy", "You can read people's thoughts and put words in their mind. This can allow you to <em>investigate a mystery,/em>, <em>read a bad situation</em>, or <em>manipulate someone</em> without actually speaking. You still roll moves as normal, except people may be weirded out my your communication style.", NONE, NONE, NULL),
-('hex', archetype:spooky, "Hex", "When you cast a spell via <em>use magic</em>, you can pick from additional magic effects.", NONE, ["The target contracts a disease.", "The target immediately suffers harm (2-harm magic ignore-armor).", "The target breaks something precious or important."], NULL),
-('sight', archetype:spooky, "The Sight", "You can see the invisible, especially spirits and magical influences. You may communicate with (maybe even make deals with) the spirits you see, and you have more opportunities to spot clues when you <em>investigate a mystery.</em>", NONE, NONE, NULL),
-('premonitions', archetype:spooky, "Premonitions", "<em>At the start of each mystery</em>, roll +Weird to uncover a premonition.", {
+('telepathy', playbook:spooky, "Telepathy", "You can read people's thoughts and put words in their mind. This can allow you to <em>investigate a mystery,/em>, <em>read a bad situation</em>, or <em>manipulate someone</em> without actually speaking. You still roll moves as normal, except people may be weirded out my your communication style.", NONE, NONE, NULL),
+('hex', playbook:spooky, "Hex", "When you cast a spell via <em>use magic</em>, you can pick from additional magic effects.", NONE, ["The target contracts a disease.", "The target immediately suffers harm (2-harm magic ignore-armor).", "The target breaks something precious or important."], NULL),
+('sight', playbook:spooky, "The Sight", "You can see the invisible, especially spirits and magical influences. You may communicate with (maybe even make deals with) the spirits you see, and you have more opportunities to spot clues when you <em>investigate a mystery.</em>", NONE, NONE, NULL),
+('premonitions', playbook:spooky, "Premonitions", "<em>At the start of each mystery</em>, roll +Weird to uncover a premonition.", {
     miss: "You get a vision of something bad happening to you and the Keeper holds 3, to be spent as penalties against future rolls you make.",
     poor: "You get clouded images of something bad that is yet to happen. Mark experience if you manage to prevent it from coming true.",
     good: "You get a detailed vision of something bad that is yet to happen. Take +1 forward to prevent it coming to pass, and you gain experience if you stop it."
-}, NONE, "weird"),
-('hunches', archetype:spooky, "Hunches", "When <em>something bad is happening (or about to happen)</em> somewhere that you aren't, roll +Sharp to see if you can make it there in time.", {
+}, NONE, "weird", true),
+('hunches', playbook:spooky, "Hunches", "When <em>something bad is happening (or about to happen)</em> somewhere that you aren't, roll +Sharp to see if you can make it there in time.", {
     miss: "You get there just in time -- to be in trouble yourself.",
     poor: "You get there late. In time to intervene, but not to prevent danger altogether.",
     good: "You knew where you needed to go, and arrive just in time to save the day."
 }, NONE, "sharp"),
-('tunein', archetype:spooky, "Tune In", "You can roll +Weird to <em>attune your mind to a monster or minion.</em>", {
+('tunein', playbook:spooky, "Tune In", "You can roll +Weird to <em>attune your mind to a monster or minion.</em>", {
     miss: "The monster becomes aware of you.",
     poor: "Ask 1 question, receive +1 ongoing while acting on the answer.",
     good: "Ask 3 questions, receive +1 ongoing while acting on the answers."
 }, ["Where is the creature right now?", "What is the creature planning to do right now?", "Who is the creature going to attack next?", "Who does the creature regard as its biggest threat?", "How can I attract the creature's attention?"], "weird"),
-('bigwhammy', archetype:spooky, "The Big Whammy", "Use your powers to <em>kick some ass</em>, rolling +Weird instead of +Tough. The attack has 2-harm close obvious ignore-armor. On a miss, you'll get magical backlash.", NONE, NONE, NULL),
-('jinx', archetype:spooky, "Jinx", "You can encourage coincidences to occur, the way you want. Roll +Weird to <em>jinx a target</em>, granting a hold to bend reality to your will.", {
+('bigwhammy', playbook:spooky, "The Big Whammy", "Use your powers to <em>kick some ass</em>, rolling +Weird instead of +Tough. The attack has 2-harm close obvious ignore-armor. On a miss, you'll get magical backlash.", NONE, NONE, NULL),
+('jinx', playbook:spooky, "Jinx", "You can encourage coincidences to occur, the way you want. Roll +Weird to <em>jinx a target</em>, granting a hold to bend reality to your will.", {
     miss: "The Keeper holds 2 over you to mess with your reality instead.",
     poor: "Hold 1.",
     good: "Hold 2."
 }, ["Interfere with a hunter, giving them -1 forward.", "Interfere with what a monster, minion, or bystander is trying to do.", "Inflict 1-harm on the target due to an accident.", "The target finds something you left for them.", "The target loses something that you will soon find."], "weird"),
-('knowmyprey', archetype:wronged, "I Know My Prey", "You get +1 ongoing when knowingly investigating, purusing or fighting the monster type that caused your loss.", NONE, NONE, NULL),
-('berserk', archetype:wronged, "Berserk", "No matter how much harm you take, you can keep going until the current fight is over. During a fight, the Keeper may not use harm moves on you and you cannot die. When the fight ends, all harm takes effect as normal.", NONE, NONE, NULL),
-('neveragain', archetype:wronged, "NEVER AGAIN", "In combat, you may choose to <em>protect someone</em> with an automatic 10, but you may not choose to 'suffer little harm.'", NONE, NONE, NULL),
-('whatdoesnotkillme', archetype:wronged, "What Does Not Kill Me...", "If you have suffered harm in a fight, you gain +1 ongoing until the fight is over.", NONE, NONE, NULL),
-('fervor', archetype:wronged, "Fervor", "When you <em>manipulate someone</em>, roll +Tough instead of +Charm.", NONE, NONE, NULL),
-('safetyfirst', archetype:wronged, "Safety First", "You have jury-rigged extra protection into your gear, giving you +1 armor (maximum 2-armor).", NONE, NONE, NULL),
-('diysurgery', archetype:wronged, "DIY Surgery", "If you'd like to do <em>quick and dirty first aid on someone</em> (including yourself), roll +Cool.", {
+('knowmyprey', playbook:wronged, "I Know My Prey", "You get +1 ongoing when knowingly investigating, purusing or fighting the monster type that caused your loss.", NONE, NONE, NULL),
+('berserk', playbook:wronged, "Berserk", "No matter how much harm you take, you can keep going until the current fight is over. During a fight, the Keeper may not use harm moves on you and you cannot die. When the fight ends, all harm takes effect as normal.", NONE, NONE, NULL),
+('neveragain', playbook:wronged, "NEVER AGAIN", "In combat, you may choose to <em>protect someone</em> with an automatic 10, but you may not choose to 'suffer little harm.'", NONE, NONE, NULL),
+('whatdoesnotkillme', playbook:wronged, "What Does Not Kill Me...", "If you have suffered harm in a fight, you gain +1 ongoing until the fight is over.", NONE, NONE, NULL),
+('fervor', playbook:wronged, "Fervor", "When you <em>manipulate someone</em>, roll +Tough instead of +Charm.", NONE, NONE, NULL),
+('safetyfirst', playbook:wronged, "Safety First", "You have jury-rigged extra protection into your gear, giving you +1 armor (maximum 2-armor).", NONE, NONE, NULL),
+('diysurgery', playbook:wronged, "DIY Surgery", "If you'd like to do <em>quick and dirty first aid on someone</em> (including yourself), roll +Cool.", {
     miss: "You made things worse - the Keeper chooses how badly.",
     poor: "Choose an option.",
     good: "You did well. The injury is stabilized and the patient healed 1 harm."
 }, ["Stabilize the injury, but the patient gets -1 forward.", "Heal 1-harm and stabilize for now, but it'll return as 2-harm and become unstable again later.", "Heal 1-harm and stabilize but the patient takes -1 ongoing until it's fixed properly."], "cool"),
-('toolsmatter', archetype:wronged, "Tools Matter", "Get +1 to <em>kick some ass</em> with your signature weapon.", NONE, NONE, NULL);
+('toolsmatter', playbook:wronged, "Tools Matter", "Get +1 to <em>kick some ass</em> with your signature weapon.", NONE, NONE, NULL);

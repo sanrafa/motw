@@ -9,69 +9,69 @@ DEFINE FIELD team ON TABLE hunter TYPE record(team) ASSERT $value IS NOT NONE;
 DEFINE FIELD user ON TABLE hunter TYPE record(user) VALUE NONE OR $after;
 DEFINE FIELD is_active ON TABLE hunter TYPE bool ASSERT $value IS NOT NONE;
 
--- find attributes that are archetype-specific
+-- find attributes that are playbook-specific
 -- will be null by default, assert that hunter type is valid
 DEFINE FIELD attributes ON TABLE hunter TYPE object;
-DEFINE FIELD attributes.archetype ON TABLE hunter TYPE record(archetype) ASSERT $value IS NOT NONE;
+DEFINE FIELD attributes.playbook ON TABLE hunter TYPE record(playbook) ASSERT $value IS NOT NONE;
 
 DEFINE FIELD attributes.look ON TABLE hunter TYPE array ASSERT array::len($value) == 3;
-    DEFINE FIELD attributes.look.* ON TABLE hunter TYPE string; -- may validate for archetype looks
+    DEFINE FIELD attributes.look.* ON TABLE hunter TYPE string; -- may validate for playbook looks
 
 DEFINE FIELD attributes.available_moves ON TABLE hunter TYPE array ASSERT $value IS NOT NONE;
-    DEFINE FIELD attributes.available_moves.* ON TABLE hunter TYPE record(move) ASSERT $value.archetype IS NONE OR ($value.archetype == $this.attributes.archetype);
+    DEFINE FIELD attributes.available_moves.* ON TABLE hunter TYPE record(move) ASSERT $value.playbook IS NONE OR ($value.playbook == $this.attributes.playbook);
 
 -- Chosen specific
 DEFINE FIELD attributes.fate ON TABLE hunter TYPE object VALUE NULL OR $after;
-    DEFINE FIELD attributes.fate.found_out ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT fate.found_out from archetype:chosen);
+    DEFINE FIELD attributes.fate.found_out ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT fate.found_out from playbook:chosen);
     DEFINE FIELD attributes.fate.doom ON TABLE hunter TYPE array ASSERT array::len($value) <= 2;
-        DEFINE FIELD attributes.fate.doom.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT fate.doom FROM archetype:chosen);
+        DEFINE FIELD attributes.fate.doom.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT fate.doom FROM playbook:chosen);
     DEFINE FIELD attributes.fate.heroic ON TABLE hunter TYPE array ASSERT array::len($value) == 2;
-        DEFINE FIELD attributes.fate.heroic.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT fate.heroic FROM archetype:chosen);
+        DEFINE FIELD attributes.fate.heroic.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT fate.heroic FROM playbook:chosen);
 
 -- Expert specific
-DEFINE FIELD attributes.haven ON TABLE hunter TYPE array VALUE NONE OR $after ASSERT $value IS NONE OR ($this.archetype = archetype:expert OR $this.improvements CONTAINSANY [improvement:flake07, improvement:monstrous07, improvement:spooky08, improvement:wronged07]);
+DEFINE FIELD attributes.haven ON TABLE hunter TYPE array VALUE NONE OR $after ASSERT $value IS NONE OR ($this.playbook = playbook:expert OR $this.improvements CONTAINSANY [improvement:flake07, improvement:monstrous07, improvement:spooky08, improvement:wronged07]);
     DEFINE FIELD attributes.haven.* ON TABLE hunter TYPE record(haven);
 
 -- Initiate specific
-DEFINE FIELD attributes.sect ON TABLE hunter TYPE object VALUE NONE OR $after ASSERT $value IS NONE OR $this.attributes.archetype = archetype:initiate;
+DEFINE FIELD attributes.sect ON TABLE hunter TYPE object VALUE NONE OR $after ASSERT $value IS NONE OR $this.attributes.playbook = playbook:initiate;
     DEFINE FIELD attributes.sect.name ON TABLE hunter TYPE string;
     DEFINE FIELD attributes.sect.details ON TABLE hunter TYPE string;
     DEFINE FIELD attributes.sect.traditions ON TABLE hunter TYPE object;
         DEFINE FIELD attributes.sect.traditions.good ON TABLE hunter TYPE array;
-            DEFINE FIELD attributes.sect.traditions.good.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT sect.traditions.good FROM archetype:initiate);
+            DEFINE FIELD attributes.sect.traditions.good.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT sect.traditions.good FROM playbook:initiate);
         DEFINE FIELD attributes.sect.traditions.bad ON TABLE hunter TYPE array;
-            DEFINE FIELD attributes.sect.traditions.bad.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT sect.traditions.bad FROM archetype:initiate);
+            DEFINE FIELD attributes.sect.traditions.bad.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT sect.traditions.bad FROM playbook:initiate);
 
 -- Monstrous specific
-DEFINE FIELD attributes.breed ON TABLE hunter TYPE object VALUE NONE OR $after ASSERT $value IS NONE OR $this.attributes.archetype = archetype:monstrous;
+DEFINE FIELD attributes.breed ON TABLE hunter TYPE object VALUE NONE OR $after ASSERT $value IS NONE OR $this.attributes.playbook = playbook:monstrous;
     DEFINE FIELD attributes.breed.name ON TABLE hunter TYPE string;
-    DEFINE FIELD attributes.breed.curse ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT breed.curse.name FROM archetype:monstrous);
+    DEFINE FIELD attributes.breed.curse ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT breed.curse.name FROM playbook:monstrous);
     DEFINE FIELD attributes.breed.natural_attacks ON TABLE hunter TYPE array ASSERT array::len($value) == 2;
-        DEFINE FIELD attributes.breed.natural_attacks.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT breed.natural_attacks FROM archetype:monstrous);
+        DEFINE FIELD attributes.breed.natural_attacks.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT breed.natural_attacks FROM playbook:monstrous);
 
 -- Professional specific
-DEFINE FIELD attributes.agency ON TABLE hunter TYPE object VALUE NONE OR $after ASSERT $value IS NONE OR $this.attributes.archetype = archetype:professional;
+DEFINE FIELD attributes.agency ON TABLE hunter TYPE object VALUE NONE OR $after ASSERT $value IS NONE OR $this.attributes.playbook = playbook:professional;
     DEFINE FIELD attributes.agency.description ON TABLE hunter TYPE string;
     DEFINE FIELD attributes.agency.goal ON TABLE hunter TYPE string;
     DEFINE FIELD attributes.agency.resources ON TABLE hunter TYPE array ASSERT array::len($value) = 3;
-        DEFINE FIELD attributes.agency.resources.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT agency.resources FROM archetype:professional);
+        DEFINE FIELD attributes.agency.resources.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT agency.resources FROM playbook:professional);
     DEFINE FIELD attributes.agency.red_tape ON TABLE hunter TYPE array ASSERT array::len($value) = 2;
-        DEFINE FIELD attributes.agency.red_tape.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT agency.red_tape FROM archetype:professional);
+        DEFINE FIELD attributes.agency.red_tape.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT agency.red_tape FROM playbook:professional);
 
 -- Spooky specific
-DEFINE FIELD attributes.dark_side ON TABLE hunter TYPE array VALUE NONE OR $after ASSERT $value IS NONE OR ($this.attributes.archetype = archetype:spooky AND array::len($value) = 3);
-    DEFINE FIELD attributes.dark_side.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT dark_side FROM archetype:spooky);
+DEFINE FIELD attributes.dark_side ON TABLE hunter TYPE array VALUE NONE OR $after ASSERT $value IS NONE OR ($this.attributes.playbook = playbook:spooky AND array::len($value) = 3);
+    DEFINE FIELD attributes.dark_side.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT dark_side FROM playbook:spooky);
 
 -- Wronged specific
-DEFINE FIELD attributes.loss ON TABLE hunter TYPE object VALUE NONE OR $after ASSERT $value IS NONE OR $this.attributes.archetype = archetype:wronged;
+DEFINE FIELD attributes.loss ON TABLE hunter TYPE object VALUE NONE OR $after ASSERT $value IS NONE OR $this.attributes.playbook = playbook:wronged;
     DEFINE FIELD attributes.loss.relations ON TABLE hunter TYPE array;
-        DEFINE FIELD attributes.loss.relations.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT loss.relations FROM archetype:wronged);
+        DEFINE FIELD attributes.loss.relations.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT loss.relations FROM playbook:wronged);
     DEFINE FIELD attributes.loss.monster_type ON TABLE hunter TYPE string;
     DEFINE FIELD attributes.loss.flaws ON TABLE hunter TYPE array;
-        DEFINE FIELD attributes.loss.flaws.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT loss.flaws FROM archetype:wronged);
+        DEFINE FIELD attributes.loss.flaws.* ON TABLE hunter TYPE string ASSERT $value INSIDE (SELECT loss.flaws FROM playbook:wronged);
 
 DEFINE FIELD attributes.gear ON TABLE hunter TYPE array;
-    DEFINE FIELD attributes.gear.* ON TABLE hunter TYPE record(gear) ASSERT $value.archetype IS NONE OR ($value.archetype = $this.attributes.archetype);
+    DEFINE FIELD attributes.gear.* ON TABLE hunter TYPE record(gear) ASSERT $value.playbook IS NONE OR ($value.playbook = $this.attributes.playbook);
 
 DEFINE FIELD attributes.luck ON TABLE hunter TYPE int VALUE $after OR 0 ASSERT $value <= 7;
 

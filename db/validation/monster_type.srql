@@ -1,0 +1,26 @@
+/// MONSTER ARCHETYPE VALIDATION TABLE
+///// Validation table of available monster playbooks
+
+DEFINE TABLE monster_type SCHEMAFULL
+    PERMISSIONS
+        FOR select FULL
+        FOR create, update, delete NONE;
+
+DEFINE FIELD name ON TABLE monster_type TYPE string ASSERT $value IS NOT NONE;
+
+DEFINE FIELD motivation ON TABLE monster_type TYPE string ASSERT $value IS NOT NONE;
+
+INSERT INTO monster_type
+(id, name, motivation) VALUES
+('beast', "Beast", "to run wild, destroying and killing"),
+('breeder', "Breeder", "to give birth to, bring forth, or create evil"),
+('collector', "Collector", "to steal specific sorts of things"),
+('destroyer', "Destroyer", "to bring about the end of the world"),
+('devourer', "Devourer", "to consume people"),
+('executioner', "Executioner", "to punish the guilty"),
+('parasite', "Parasite", "to infest, control and devour"),
+('queen', "Queen", "to possess and control"),
+('sorcerer', "Sorcerer", "to usurp unnatural power"),
+('tempter', "Tempter", "to tempt people into evil deeds"),
+('torturer', "Torturer", "to hurt and terrify"),
+('trickster', "Trickster", "to create chaos");

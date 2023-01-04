@@ -1,0 +1,24 @@
+/// MINION ARCHETYPE VALIDATION TABLE
+///// Available minion playbooks
+
+DEFINE TABLE minion_type SCHEMAFULL
+    PERMISSIONS
+        FOR select FULL
+        FOR create, update, delete NONE;
+
+DEFINE FIELD name ON TABLE minion_type TYPE string ASSERT $value IS NOT NONE;
+
+DEFINE FIELD motivation ON TABLE minion_type TYPE string ASSERT $value IS NOT NONE;
+
+INSERT INTO minion_type
+(id, name, motivation) VALUES
+('assassin', "Assassin", "to kill the hunters"),
+('brute', "Brute", "to intimidate and attack"),
+('cultist', "Cultist", "to save their own skin at any cost"),
+('guardian', "Guardian", "to bar a way or protect something"),
+('righthand', "Right hand", "to back up the monster"),
+('plague', "Plague", "to swarm and destroy"),
+('renfield', "Renfield", "to push victims toward the monster"),
+('scout', "Scout", "to stalk, watch, and report back"),
+('thief', "Thief", "to steal and deliver to the monster"),
+('traitor', "Traitor", "to betray people");
