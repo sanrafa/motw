@@ -11,4 +11,4 @@ services:
     image: surrealdb/surrealdb:latest
     ports:
       - 127.0.0.1:8000:8000
-    command: 'start --log trace --user root --pass ${SURREALDB_PASS}'
+    command: 'start --log trace --user ${SURREAL_USER} --pass ${SURREAL_PASS}'
