@@ -13,3 +13,8 @@ export type ReturnObject<T> = {
 	} | null;
 	data?: T;
 };
+
+export type ValError = {
+	field: string | number | null;
+	message: string;
+};

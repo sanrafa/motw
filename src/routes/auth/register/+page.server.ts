@@ -2,6 +2,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
 import type { Actions } from './$types';
 import { registerUser } from '$lib/server/auth';
+import type { ValError } from '$lib/types';
 
 const registerSchema = z.object({
 	username: z
@@ -20,6 +21,8 @@ const registerSchema = z.object({
 		.trim()
 		.min(8, { message: 'A password must be at least 8 characters long.' })
 });
+
+type ValErrors = ValError[];
 
 export const actions: Actions = {
 	default: async ({ cookies, request }) => {
@@ -61,17 +64,24 @@ export const actions: Actions = {
 				return fail(400, {
 					username,
 					email,
-					errors: [{ ...result.errorInfo }]
+					errors: [{ ...(result.errorInfo as ValError) }] satisfies ValErrors
 				});
 			}
 		} else {
 			const errors = parsed.error.errors.map((error) => {
 				return {
-					field: error.path,
+					field: error.path[0],
 					message: error.message
 				};
 			});
-			return fail(400, { username, email, errors });
+			return fail<{ username: FormDataEntryValue; email: FormDataEntryValue; errors: ValErrors }>(
+				400,
+				{
+					username,
+					email,
+					errors
+				}
+			);
 		}
 	}
 };
