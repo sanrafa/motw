@@ -3,7 +3,7 @@ import { z } from 'zod';
 import type { Actions } from './$types';
 import { registerUser } from '$lib/server/auth';
 
-const inputSchema = z.object({
+const registerSchema = z.object({
 	username: z
 		.string({
 			required_error: 'A username is required.'
@@ -45,7 +45,7 @@ export const actions: Actions = {
 
 		const input = { username, email, pass };
 
-		const parsed = inputSchema.safeParse(input);
+		const parsed = registerSchema.safeParse(input);
 
 		if (parsed.success) {
 			const result = await registerUser(parsed.data);
@@ -54,7 +54,7 @@ export const actions: Actions = {
 				cookies.set('auth', token, {
 					path: '/',
 					httpOnly: true,
-					secure: import.meta.env.MODE === 'development' ? true : false
+					secure: import.meta.env.MODE === 'development' ? false : true
 				});
 				throw redirect(303, '/dashboard');
 			} else {

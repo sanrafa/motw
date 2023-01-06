@@ -1,15 +1,6 @@
 import db, { connectToDB } from './database';
-import type { User } from '$lib/types';
+import type { User, ReturnObject } from '$lib/types';
 import { env } from '$env/dynamic/private';
-
-type ReturnObject<T> = {
-	error: boolean;
-	errorInfo: {
-		field: string | null;
-		message: string;
-	} | null;
-	data?: T;
-};
 
 export async function authenticateUser(token: string): Promise<User | null> {
 	await db.authenticate(token);

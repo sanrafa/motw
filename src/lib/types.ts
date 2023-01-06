@@ -4,3 +4,12 @@ export type User = {
 	username: string;
 	pass: string;
 };
+
+export type ReturnObject<T> = {
+	error: boolean;
+	errorInfo: {
+		field: string | null;
+		message: string;
+	} | null;
+	data?: T;
+};
