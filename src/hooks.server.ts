@@ -3,7 +3,7 @@ import type { Handle } from '@sveltejs/kit';
 import { authenticateUser } from '$lib/server/auth';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	const token = event.cookies.get('token');
+	const token = event.cookies.get('auth');
 	const user = token ? await authenticateUser(token) : null;
 	if (user) event.locals.user = user;
 
